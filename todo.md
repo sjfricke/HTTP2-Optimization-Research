@@ -13,5 +13,5 @@
   * `node1.local`
 * Sorting/Parse and getting data from HAR files **Emmanuel**
   * Store into database
-* setup a MySQL database **Spencer**
+* ~~setup a MySQL database **Spencer**~~
 * ~~setup website for node1/2 server **Spencer**~~
