@@ -23,3 +23,21 @@ http://www.mysqltutorial.org/python-connecting-mysql-databases/
 http://www.mysqltutorial.org/python-mysql-insert/
 
 
+DB Scheme:
+* Website
+** Domain -- accessed websites domain
+** NumberOfFiles -- total number of files
+** RequestedOrder - ASC, DESC, NONE
+** FirstLoad - True if yes, else no
+
+
+* Request
+** Domain
+** RequestURL
+** Blocked
+** DNS
+** Connected 
+** Send 
+** Wait
+** Receive
+** SSL
