@@ -22,33 +22,6 @@ class Request:
         self.ssl = ssl
         Request.requestCount += 1
 
-    def get_domain(self):
-        return self.domain
-
-    def get_url(self):
-        return self.url
-
-    def get_blocked(self):
-        return self.blocked
-
-    def get_dns(self):
-        return self.dns
-
-    def get_connect(self):
-        return self.connect
-
-    def get_send(self):
-        return self.send
-
-    def get_wait(self):
-        return self.wait
-
-    def get_receive(self):
-        return self.receive
-
-    def get_ssl(self):
-        return self.ssl
-
     def get_total_requests(self):
         return Request.requestCount
 
@@ -143,14 +116,14 @@ def parse_har(domain):
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,)"
 
         for request in requests_for_sql:
-            url = request.get_url
-            blocked = request.get_blocked()
-            dns = request.get_dns()
-            connect = request.get_connect()
-            send = request.get_send()
-            wait = request.get_wait()
-            receive = request.get_receive()
-            ssl = request.get_ssl()
+            url = request.url
+            blocked = request.blocked
+            dns = request.dns
+            connect = request.connect
+            send = request.send
+            wait = request.wait
+            receive = request.receive
+            ssl = request.ssl
 
             args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
             cursor.execute(request_query, args)
@@ -171,6 +144,5 @@ if __name__ == '__main__':
     # Get File and Parse JSON
     # TODO Load file from command line
     cur_path = os.path.dirname(__file__)
-    #file_path = os.path.relpath('HAR_test_files/example.com.har', cur_path)
     domain = os.path.relpath('HAR_test_files/www.facebook.com.har', cur_path)
     parse_har(domain)
