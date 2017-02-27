@@ -101,7 +101,7 @@ def parse_har(domain):
 
         ''' Insert Info into Website Table '''
         website_query = "INSERT INTO Website(Domain, NumberOfFiles, RequestOrder, FirstLoad ) " \
-                        "VALUES(%s,%d,%s,%s)"
+                        "VALUES(%s,%s,%s,%s)"
 
         args = (domain, NumberOfFiles, RequestOrder, FirstLoad)
         cursor.execute(website_query, args)
@@ -110,10 +110,12 @@ def parse_har(domain):
         else:
             print('last insert id not found')
         conn.commit()
+        print 'Finished inserting into Website'
 
         ''' Insert requests into Request Table'''
+        # TODO FIGURE OUT HOW TO INSERT FLOATING POINT VALUES
         request_query = "INSERT INTO Request(Domain, RequestURL, Blocked, DNS, Connected, Send, Wait, Receive, SSL) " \
-                        "VALUES(%s,%s,%f,%f,%f,%f,%f,%f,%f)"
+                        "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
         for request in requests_for_sql:
             url = request.url
