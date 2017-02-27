@@ -10,7 +10,7 @@ from mysql.connector import Error
 class Request:
     requestCount = 0
 
-    def __init__(self, domain, url,blocked,dns,connect,sent,wait, receive, ssl):
+    def __init__(self, domain, url,blocked,dns,connect,send,wait, receive, ssl):
         self.domain = domain
         self.url = url
         self.blocked = blocked
@@ -37,8 +37,9 @@ class Request:
     def get_connect(self):
         return self.connect
 
-    def get_sent(self):
-        return self.sent
+    def get_send(self):
+    def get_send(self):
+        return self.send
 
     def get_wait(self):
         return self.wait
@@ -139,12 +140,12 @@ def parse_har(domain):
         conn.commit()
 
         ''' Insert requests into Request Table'''
-        request_query = "INSERT INTO Request(Domain,RequestURL,Blocked,DNS,Connect,Sent,Wait,Receive,SSL) " \
+        request_query = "INSERT INTO Request(Domain,RequestURL,Blocked,DNS,Connect,Send,Wait,Receive,SSL) " \
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,)"
 
         for request in requests_for_sql:
             args = (domain, request.get_url, request.get_blocked(),
-                    request.get_dns(), request.get_connect(), request.get_sent(),
+                    request.get_dns(), request.get_connect(), request.get_send(),
                     request.get_wait(), request.get_receive(), request.get_ssl())
             cursor.execute(request_query, args)
             print 'Inserting Request: ', request.get_url()
