@@ -38,7 +38,6 @@ class Request:
         return self.connect
 
     def get_send(self):
-    def get_send(self):
         return self.send
 
     def get_wait(self):
