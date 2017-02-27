@@ -20,7 +20,6 @@ class Request:
         self.wait = wait
         self.receive = receive
         self.ssl = ssl
-
         Request.requestCount += 1
 
     def get_domain(self):
@@ -56,16 +55,16 @@ class Request:
 """ HAR PARSER """
 
 
-def parse_har(file_path):
+def parse_har(domain):
 
-    with open(file_path) as data_file:
+    with open(domain) as data_file:
         data = json.load(data_file)
 
     """ Website Table Fields """
-    domain = file_path
+    domain = domain
     NumberOfFiles = 0
-    RequestedOrder = 'NONE'  # TODO How to determine Request Order?
-    FirstLoad = True  # Check cache of all files, if always empty, its first load
+    RequestOrder = 'NONE'  # TODO How to determine Request Order?
+    FirstLoad = True
 
     """ Request Table Fields"""
     # url = ''
@@ -77,24 +76,22 @@ def parse_har(file_path):
     # receive = 0
     # ssl = 0
 
-    log = data['log']
     entries = data['log']['entries']
 
     # Array of requests to insert into DB
     requests_for_sql = []
     NumberOfFiles = len(entries)
 
-    # Iterate through entries
+    # Iterate through entries/files downloaded
     for entry in entries:
 
-        # Is Request Cahced
+        # Is request cached
         cached = entry['cache']
         if len(cached):
             FirstLoad = False  # Something found in cache
 
-        # Get Request Info
-        request = entry['request']
-        url = request['url']
+        # Get Request URL
+        url = entry['request']['url']
 
         # Get Timings
         timings = entry['timings']
@@ -106,7 +103,7 @@ def parse_har(file_path):
         receive = timings['receive']
         ssl = timings['ssl']
 
-        # Create request object and add list
+        # Create request object and add to list
 
         req = Request(domain, url, blocked, dns, connect, send,  wait, receive, ssl)
         requests_for_sql.append(req)
@@ -114,6 +111,7 @@ def parse_har(file_path):
     print 'Done Parsing HAR File'
 
     """ Connect and INSERT to MySQL database """
+
     try:
         print 'Connecting to DB'
         conn = mysql.connector.connect(host='127.0.0.1',
@@ -125,22 +123,34 @@ def parse_har(file_path):
 
         """Inserting Into DB"""
         print 'Inserting into DB'
-        # Website Table Entry
-        # INSERT INTO har_db Website('Domain', 'NumberOfFiles' , 'RequestOrder', 'FirstLoad')domain = ''
-        # NumberOfFiles = 0
-        # RequestedOrder = ''
-        # FirstLoad = False
 
-        # INSERT
+        cursor = conn.cursor()
+
+        ''' Insert Info into Website Table '''
+        website_query = "INSERT INTO Website(Domain, NumberOfFiles, RequestOrder, FirstLoad ) " \
+                        "VALUES(%s,%s,%s,%s)"
+
+        args = (domain, NumberOfFiles, RequestOrder, FirstLoad)
+        cursor.execute(website_query, args)
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+        conn.commit()
+
+        ''' Insert requests into Request Table'''
+        # request_query = "INSERT INTO books(title,isbn) " \
+        #                 "VALUES(%s,%s)"
 
         for request in requests_for_sql:
-            print 'inserting request'
+            print 'inserting request', request.get_url()
 
     except Error as e:
         print(e)
 
     finally:
         conn.close()
+        cursor.close()
 
     print "Parsed File Successfully"
 
@@ -150,5 +160,5 @@ if __name__ == '__main__':
     # TODO Load file from command line
     cur_path = os.path.dirname(__file__)
     #file_path = os.path.relpath('HAR_test_files/example.com.har', cur_path)
-    file_path = os.path.relpath('HAR_test_files/www.facebook.com.har', cur_path)
-    parse_har(file_path)
+    domain = os.path.relpath('HAR_test_files/www.facebook.com.har', cur_path)
+    parse_har(domain)
