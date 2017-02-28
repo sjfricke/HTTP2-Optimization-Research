@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ### usage
-#./website_gen.sh #ofObjects #ObjectStructure #ObjectType #MinSizeObject #MaxSizeObject
+#./website_gen.sh #ofObjects #ObjectStructure #ObjectType #MinSizeObject #MaxSizeObject #BS
 
 #ofObjects - how many objects in a webpage
 
@@ -39,7 +39,7 @@ OBJ_COUNT=$1
 OBJ_STRUCT=$2
 OBJ_TYPE=$3
 OBJ_MIN_SIZE=$4
-OBJ_MAN_SIZE=$5
+OBJ_MAX_SIZE=$5
 BS=$6
 
 ### directory gen
@@ -54,7 +54,7 @@ if [ -a $COUNT_FP ]
 		echo 0 > $COUNT_FP
 fi
 
-WEB_FP=$MAIN_WEB_FP"/http/"$WEB_NUM
+WEB_FP=$MAIN_WEB_FP"html/"$WEB_NUM
 
 mkdir $WEB_FP
 INDEX_FP=$WEB_FP"/index.html" 
@@ -67,52 +67,136 @@ echo "<header></header>" >> $INDEX_FP
 echo "<body><h1>Chuck Likes Vim</h1>" >> $INDEX_FP
 
 ### object gen
-OBJ_DIF=$(OBJ_MAX_SIZE - OBJ_MIN_SIZE)
+OBJ_DIF=$(( OBJ_MAX_SIZE - OBJ_MIN_SIZE ))
 
 case "$OBJ_TYPE" in
-0)# All js
+0)#All js
 	for i in `seq 1 $OBJ_COUNT`;
 	do
-		case "$OBJ_STRUCT"
+		case "$OBJ_STRUCT" in
 		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=(OBJ_MAX_SIZE/BS)				
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
 		;;
 		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=((OBJ_MIN_SIZE + i*(OBJ_DIF))/BS)				
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=((OBJ_MAX_SIZE - i*(OBJ_DIF))/BS)				
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		3)#Random
-			#some RANDOM FUNCTION
-			#RAND=RAND(OBJ_MIN_SIZE, OBJ_MAX_SIZE)
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=(RAND/BS)				
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
 		;;
 		esac		
 		echo "<script src='$OBJECT_FP$i'></script>" >> $INDEX_FP
 	done
-
+;;
+1)#All css
+	for i in `seq 1 $OBJ_COUNT`;
+	do
+		case "$OBJ_STRUCT" in
+		0)#All Max size
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+		;;
+		1)#Ascending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		2)#Descending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		3)#Random
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+		;;
+		esac		
+		echo "<link rel='stylesheet' property='stylesheet' href='$OBJECT_FP$i'>" >> $INDEX_FP
+	done
+;;
+2)#All img 
+	for i in `seq 1 $OBJ_COUNT`;
+	do
+		case "$OBJ_STRUCT" in
+		0)#All Max size
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+		;;
+		1)#Ascending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		2)#Descending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		3)#Random
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+		;;
+		esac		
+		echo "<img src='$OBJECT_FP$i'>" >> $INDEX_FP
+	done
+;;
+3)#All garbage
+	for i in `seq 1 $OBJ_COUNT`;
+	do
+		case "$OBJ_STRUCT" in
+		0)#All Max size
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+		;;
+		1)#Ascending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		2)#Descending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		3)#Random
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+		;;
+		esac		
+		echo "<a href='$OBJECT_FP$i' download>" >> $INDEX_FP
+	done
+;;
+4)#Random
+	for i in `seq 1 $OBJ_COUNT`;
+	do
+		case "$OBJ_STRUCT" in
+		0)#All Max size
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+		;;
+		1)#Ascending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		2)#Descending order
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+		;;
+		3)#Random
+			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+		;;
+		esac	
+		
+		case "$RANDOM % 4" in 
+		0)
+			echo "<script src='$OBJECT_FP$i'></script>" >> $INDEX_FP
+		;;
+		1)
+			echo "<link rel='stylesheet' property='stylesheet' href='$OBJECT_FP$i'>" >> $INDEX_FP
+		;;
+		2)
+			echo "<img src='$OBJECT_FP$i'>" >> $INDEX_FP
+		;;
+		3)
+			echo "<a href='$OBJECT_FP$i' download>" >> $INDEX_FP
+		;;
+		esac	
+	done
+;;
 esac
-## js gen
-
-## css gen
-
-## img gen
-
-## garbage gen
 
 ### html gen end
 echo "</body></html>" >> $INDEX_FP
 
 ### permissions/cleanup
 
-# sub folders in /var/www/http
-# varible number of websites
-# vairble number of objects
-# varible size of objects
-# varible file type just to make sure
-# diffrent sizes in diffrent order
-# reorder files
+### functions
 
-### Choices
+
+
+purge() {
+	rm -rf '/var/www/html'
+	return 0
+}
 
