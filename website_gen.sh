@@ -1,38 +1,70 @@
 #! /bin/bash
+### functions
 
-### usage
-#./website_gen.sh #ofObjects #ObjectStructure #ObjectType #MinSizeObject #MaxSizeObject #BS
+print_help() {
+	echo "
+	#----------------------------------------------------------------------------
+	### usage
+	#./website_gen.sh #ofObjects/AlternateOption #ObjectStructure #ObjectType #MinSizeObject #MaxSizeObject #BS
 
-#ofObjects - how many objects in a webpage
+	#Alternate Options
+	##-help prints this page
+	##-purge deletes all websites from /var/www/html and sets web counter to 0
 
-#ObjectStructure - How the objects are arranged in HTML top to bottom
-## 0 All Max Size
-## 1 Ascending Size
-## 2 Descedning Size
-## 3 Random Placement
+	#ofObjects - how many objects in a webpage
 
-#ObjectType - What type of objects to use
-## 0 All js
-## 1 All css
-## 2 All img
-## 3 All garbage ahref
-## 4 Random types (multiple of each)
+	#ObjectStructure - How the objects are arranged in HTML top to bottom
+	## 0 All Max Size
+	## 1 Ascending Size
+	## 2 Descedning Size
+	## 3 Random Placement
 
-#ObjectMinSize - how small in bytes
+	#ObjectType - What type of objects to use
+	## 0 All js
+	## 1 All css
+	## 2 All img
+	## 3 All garbage ahref
+	## 4 Random types (multiple of each)
 
-#ObjectMaxSize - how large in bytes
+	#ObjectMinSize - how small in bytes
 
-#BS - buffer strategy for dd
+	#ObjectMaxSize - how large in bytes
 
-###Note 
-#For ObjectStructure 1,2,3 the size of the files will be assigned
-#a size from min size to max size with a diffrence of (max - min)/#ofObjects
+	#BS - buffer strategy for dd
 
-#----------------------------------------------------------------------------
+	###Note 
+	#For ObjectStructure 1,2,3 the size of the files will be assigned
+	#a size from min size to max size with a diffrence of (max - min)/#ofObjects
+
+	#----------------------------------------------------------------------------
+	"
+	return 0
+}
+
+purge() {
+	rm -rf /var/www/html/*
+	rm $COUNT_FP
+	return 0
+}
+
 ###Constants
 MAIN_WEB_FP="/var/www/"
 COUNT_FP=$MAIN_WEB_FP".web_count"
 HTML_DOCTYPE="<!DOCTYPE thml>"
+
+###Prelim options
+OPTION=$1
+
+case "$OPTION" in
+-purge)#purge
+	purge ""
+	exit 0
+;;
+-help)#help
+	print_help ""
+	exit 0
+;;
+esac
 
 ###Input Paramaeters
 OBJ_COUNT=$1
@@ -168,7 +200,7 @@ case "$OBJ_TYPE" in
 		;;
 		esac	
 		
-		case "$RANDOM % 4" in 
+		case "$(( RANDOM % 4 ))" in 
 		0)
 			echo "<script src='$OBJECT_FP$i'></script>" >> $INDEX_FP
 		;;
@@ -189,14 +221,7 @@ esac
 ### html gen end
 echo "</body></html>" >> $INDEX_FP
 
-### permissions/cleanup
+### permissions
+chmod 777 -R $WEB_FP
 
-### functions
-
-
-
-purge() {
-	rm -rf '/var/www/html'
-	return 0
-}
 
