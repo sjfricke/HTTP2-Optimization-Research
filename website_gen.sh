@@ -2,39 +2,41 @@
 ### functions
 
 print_help() {
-	echo "
+	echo -e "
 	#----------------------------------------------------------------------------
-	### usage
-	#./website_gen.sh #ofObjects/AlternateOption #ObjectStructure #ObjectType #MinSizeObject #MaxSizeObject #BS
+	### usage (all intputs are ints except for alternate options)
+	\e[32m./website_gen.sh\e[0m \e[33mNumberofObjects/\e[93mAlternateOption\e[0m \e[36mObjectStructure\e[0m \e[35mObjectType\e[0m \e[94mMinSizeObject\e[0m \e[34mMaxSizeObject\e[0m \e[97mBS\e[0m
 
-	#Alternate Options
-	##-help prints this page
-	##-purge deletes all websites from /var/www/html and sets web counter to 0
+	\e[93m#Alternate Options\e[0m
+	\e[92m##-help prints this page
+	\e[91m##-purge deletes all websites from /var/www/html and sets web counter to 0
 
-	#ofObjects - how many objects in a webpage
+	\e[33m#NumberofObjects - how many objects in a webpage\e[0m
 
-	#ObjectStructure - How the objects are arranged in HTML top to bottom
-	## 0 All Max Size
+	\e[96m#ObjectStructure - How the objects are arranged in HTML top to bottom
+	\e[36m## 0 All Max Size
 	## 1 Ascending Size
 	## 2 Descedning Size
 	## 3 Random Placement
 
-	#ObjectType - What type of objects to use
-	## 0 All js
+	\e[95m#ObjectType - What type of objects to use
+	\e[35m## 0 All js
 	## 1 All css
 	## 2 All img
 	## 3 All garbage ahref
 	## 4 Random types (multiple of each)
 
-	#ObjectMinSize - how small in bytes
+	\e[94m#ObjectMinSize - how small in bytes
 
-	#ObjectMaxSize - how large in bytes
+	\e[34m#ObjectMaxSize - how large in bytes
 
-	#BS - buffer strategy for dd
+	\e[97m#BS - buffer strategy for dd\e[0m
 
 	###Note 
 	#For ObjectStructure 1,2,3 the size of the files will be assigned
 	#a size from min size to max size with a diffrence of (max - min)/#ofObjects
+
+	\e[8mChristian Rules\e[0m
 
 	#----------------------------------------------------------------------------
 	"
@@ -51,6 +53,12 @@ purge() {
 MAIN_WEB_FP="/var/www/"
 COUNT_FP=$MAIN_WEB_FP".web_count"
 HTML_DOCTYPE="<!DOCTYPE thml>"
+
+###Error Checking
+if [[ $# -eq 0 ]] ; then
+    print_help ""
+    exit 0
+fi
 
 ###Prelim options
 OPTION=$1
