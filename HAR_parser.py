@@ -38,6 +38,8 @@ def parse_har(domain):
     NumberOfFiles = 0
     RequestOrder = 'NONE'  # TODO How to determine Request Order?
     FirstLoad = True
+    OnContentLoad = 0
+    OnLoad = 0
 
     """ Request Table Fields"""
     # url = ''
@@ -54,6 +56,9 @@ def parse_har(domain):
     # Array of requests to insert into DB
     requests_for_sql = []
     NumberOfFiles = len(entries)
+    OnContentLoad = data['log']['pages'][0]['pageTimings']['onContentLoad']
+    OnLoad = data['log']['pages'][0]['pageTimings']['onLoad']
+
 
     # Iterate through entries/files downloaded
     for entry in entries:
@@ -77,7 +82,6 @@ def parse_har(domain):
         ssl = timings['ssl']
 
         # Create request object and add to list
-
         req = Request(domain, url, blocked, dns, connect, send,  wait, receive, ssl)
         requests_for_sql.append(req)
 
@@ -100,10 +104,10 @@ def parse_har(domain):
         cursor = conn.cursor()
 
         ''' Insert Info into Website Table '''
-        website_query = "INSERT INTO Website(Domain, NumberOfFiles, RequestOrder, FirstLoad ) " \
-                        "VALUES(%s,%s,%s,%s)"
+        website_query = "INSERT INTO Website(Domain, NumberOfFiles, RequestOrder, FirstLoad , OnContentLoad, OnLoad ) " \
+                        "VALUES(%s, %s, %s, %s, %s, %s)"
 
-        args = (domain, NumberOfFiles, RequestOrder, FirstLoad)
+        args = (domain, NumberOfFiles, RequestOrder, FirstLoad, OnContentLoad, OnLoad)
         cursor.execute(website_query, args)
         if cursor.lastrowid:
             print('last insert id', cursor.lastrowid)
@@ -112,25 +116,25 @@ def parse_har(domain):
         conn.commit()
         print 'Finished inserting into Website'
 
-        ''' Insert requests into Request Table'''
-        # TODO FIGURE OUT HOW TO INSERT FLOATING POINT VALUES
-        request_query = "INSERT INTO Request(Domain, RequestURL, Blocked, DNS, Connected, Send, Wait, Receive, SSL) " \
-                        "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
-        for request in requests_for_sql:
-            url = request.url
-            blocked = request.blocked
-            dns = request.dns
-            connect = request.connect
-            send = request.send
-            wait = request.wait
-            receive = request.receive
-            ssl = request.ssl
-
-            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
-            cursor.execute(request_query, args)
-            print 'Inserting Request: ', request.get_url()
-            conn.commit()
+        # ''' Insert requests into Request Table'''
+        # # TODO FIGURE OUT HOW TO INSERT FLOATING POINT VALUES
+        # request_query = "INSERT INTO Request(Domain, RequestURL, Blocked, DNS, Connected, Send, Wait, Receive, SSL) " \
+        #                 "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        #
+        # for request in requests_for_sql:
+        #     url = request.url
+        #     blocked = request.blocked
+        #     dns = request.dns
+        #     connect = request.connect
+        #     send = request.send
+        #     wait = request.wait
+        #     receive = request.receive
+        #     ssl = request.ssl
+        #
+        #     args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
+        #     cursor.execute(request_query, args)
+        #     print 'Inserting Request: ', url
+        #     conn.commit()
 
     except Error as e:
         print(e)
