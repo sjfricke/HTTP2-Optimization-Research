@@ -116,25 +116,24 @@ def parse_har(domain):
         conn.commit()
         print 'Finished inserting into Website'
 
-        # ''' Insert requests into Request Table'''
-        # # TODO FIGURE OUT HOW TO INSERT FLOATING POINT VALUES
-        # request_query = "INSERT INTO Request(Domain, RequestURL, Blocked, DNS, Connected, Send, Wait, Receive, SSL) " \
-        #                 "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        #
-        # for request in requests_for_sql:
-        #     url = request.url
-        #     blocked = request.blocked
-        #     dns = request.dns
-        #     connect = request.connect
-        #     send = request.send
-        #     wait = request.wait
-        #     receive = request.receive
-        #     ssl = request.ssl
-        #
-        #     args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
-        #     cursor.execute(request_query, args)
-        #     print 'Inserting Request: ', url
-        #     conn.commit()
+        ''' Insert requests into Request Table'''
+        request_query = "INSERT INTO Request(Domain, RequestURL, Blocked, DNS, Connected, Send, Wait, Receive, SSL) " \
+                        "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+        for request in requests_for_sql:
+            url = request.url
+            blocked = request.blocked
+            dns = request.dns
+            connect = request.connect
+            send = request.send
+            wait = request.wait
+            receive = request.receive
+            ssl = request.ssl
+
+            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
+            cursor.execute(request_query, args)
+            print 'Inserting Request: ', url
+            conn.commit()
 
     except Error as e:
         print(e)
