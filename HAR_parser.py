@@ -119,7 +119,7 @@ def parse_har(domain):
         ''' Insert requests into Request Table'''
         request_query = "INSERT INTO Request(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time) " \
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
+        count = 1
         for request in requests_for_sql:
             url = request.url
             blocked = request.blocked
@@ -128,11 +128,12 @@ def parse_har(domain):
             send = request.send
             wait = request.wait
             receive = request.receive
-            ssl_time = request.ssl
+            ssl = request.ssl
 
-            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl_time)
+            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
             cursor.execute(request_query, args)
-            print 'Inserting Request: ', url
+            print 'Inserting Request: ', count, ' ', url
+            count += 1
             conn.commit()
 
     except Error as e:
