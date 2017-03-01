@@ -2,6 +2,7 @@ import json
 import mysql.connector
 import os
 from mysql.connector import Error
+import sys
 
 
 """ REQUEST OBJECT"""
@@ -150,5 +151,9 @@ if __name__ == '__main__':
     # Get File and Parse JSON
     # TODO Load file from command line
     cur_path = os.path.dirname(__file__)
-    domain = os.path.relpath('HAR_test_files/www.facebook.com.har', cur_path)
+    fileName = sys.argv[1]
+    location = 'HAR_test_files/'
+    filePath = location + fileName
+    domain = os.path.relpath(filePath, cur_path)
+    #domain = os.path.relpath('HAR_test_files/www.facebook.com.har', cur_path)
     parse_har(domain)
