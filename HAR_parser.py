@@ -117,7 +117,7 @@ def parse_har(domain):
         print 'Finished inserting into Website'
 
         ''' Insert requests into Request Table'''
-        request_query = "INSERT INTO Request(Domain, RequestURL, Blocked, DNS, Connected, Send, Wait, Receive, SSL) " \
+        request_query = "INSERT INTO Request(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time) " \
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
         for request in requests_for_sql:
@@ -128,9 +128,9 @@ def parse_har(domain):
             send = request.send
             wait = request.wait
             receive = request.receive
-            ssl = request.ssl
+            ssl_time = request.ssl
 
-            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
+            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl_time)
             cursor.execute(request_query, args)
             print 'Inserting Request: ', url
             conn.commit()
