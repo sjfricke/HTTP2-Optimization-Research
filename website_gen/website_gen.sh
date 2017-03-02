@@ -115,19 +115,19 @@ case "$OBJ_TYPE" in
 	do
 		case "$OBJ_STRUCT" in
 		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
 		;;
 		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
 		;;
 		esac		
-		echo "<script src='$OBJECT_FP$i'></script>" >> $INDEX_FP
+		echo "<script src='object$i".js"'></script>" >> $INDEX_FP
 	done
 ;;
 1)#All css
@@ -135,19 +135,19 @@ case "$OBJ_TYPE" in
 	do
 		case "$OBJ_STRUCT" in
 		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
 		;;
 		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
 		;;
 		esac		
-		echo "<link rel='stylesheet' property='stylesheet' href='$OBJECT_FP$i'>" >> $INDEX_FP
+		echo "<link rel='stylesheet' property='stylesheet' href='object$i".css"'>" >> $INDEX_FP
 	done
 ;;
 2)#All img 
@@ -155,19 +155,19 @@ case "$OBJ_TYPE" in
 	do
 		case "$OBJ_STRUCT" in
 		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
 		;;
 		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
 		;;
 		esac		
-		echo "<img src='$OBJECT_FP$i'>" >> $INDEX_FP
+		echo "<img src='object$i".png"'>" >> $INDEX_FP
 	done
 ;;
 3)#All garbage
@@ -175,19 +175,19 @@ case "$OBJ_TYPE" in
 	do
 		case "$OBJ_STRUCT" in
 		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
 		;;
 		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
 		;;
 		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
 		;;
 		esac		
-		echo "<a href='$OBJECT_FP$i' download>" >> $INDEX_FP
+		echo "<a href='object$i".totallynotavirus"' download>Click ME! Totally not a Virus #$i</a>" >> $INDEX_FP
 	done
 ;;
 4)#Random
@@ -210,16 +210,16 @@ case "$OBJ_TYPE" in
 		
 		case "$(( RANDOM % 4 ))" in 
 		0)
-			echo "<script src='$OBJECT_FP$i'></script>" >> $INDEX_FP
+			echo "<script src='object$i'></script>" >> $INDEX_FP
 		;;
 		1)
-			echo "<link rel='stylesheet' property='stylesheet' href='$OBJECT_FP$i'>" >> $INDEX_FP
+			echo "<link rel='stylesheet' property='stylesheet' href='object$i'>" >> $INDEX_FP
 		;;
 		2)
-			echo "<img src='$OBJECT_FP$i'>" >> $INDEX_FP
+			echo "<img src='object$i'>" >> $INDEX_FP
 		;;
 		3)
-			echo "<a href='$OBJECT_FP$i' download>" >> $INDEX_FP
+			echo "<a href='object$i' download>Click Me! ;)</a>" >> $INDEX_FP
 		;;
 		esac	
 	done
@@ -230,6 +230,7 @@ esac
 echo "</body></html>" >> $INDEX_FP
 
 ### permissions
-chmod 777 -R $WEB_FP
+chmod 644 -R $WEB_FP
+chmod 755 $WEB_FP
 
 
