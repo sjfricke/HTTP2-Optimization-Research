@@ -152,7 +152,7 @@ def parse_har(domain):
         print 'Finished inserting into Website'
 
         ''' Insert requests into Request Table'''
-        request_query = "INSERT INTO Request(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time, " \
+        request_query = "INSERT INTO Entries(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time, " \
                         "RequestHeaderSize, RequestBodySize, ResponseHeaderSize, ResponseBodySize, ResponseStatus," \
                         "ResponseTransferSize, ContentType) " \
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
