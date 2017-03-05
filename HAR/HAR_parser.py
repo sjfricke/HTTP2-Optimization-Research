@@ -155,7 +155,7 @@ def parse_har(domain):
         request_query = "INSERT INTO Entries(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time, " \
                         "RequestHeaderSize, RequestBodySize, ResponseHeaderSize, ResponseBodySize, ResponseStatus," \
                         "ResponseTransferSize, ContentType) " \
-                        "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         count = 1
         for request in requests_for_sql:
             url = request.url
