@@ -64,7 +64,7 @@ def parse_har(domain):
     # wait = 0
     # receive = 0
     # ssl = 0
-    # requestHeaderSize
+    # requestHeadersSize
     # requestBodySize
     # responseBodySize
     # responseStatus
@@ -102,7 +102,7 @@ def parse_har(domain):
         ssl = timings['ssl']
 
         ## Request Info
-        requestHeaderSize = entry['request']['headersSize']
+        requestHeadersSize = entry['request']['headersSize']
         requestBodySize = entry['request']['bodySize']
 
         ## Response Info
@@ -116,7 +116,7 @@ def parse_har(domain):
                 contentType = i['value']
 
         # Create request object and add to list
-        req = Request(domain, url, blocked, dns, connect, send,  wait, receive, ssl, requestHeaderSize, requestBodySize,
+        req = Request(domain, url, blocked, dns, connect, send,  wait, receive, ssl, requestHeadersSize, requestBodySize,
                       responseHeadersSize, responseBodySize, responseStatus, responseTransferSize, contentType)
         requests_for_sql.append(req)
 
@@ -153,7 +153,7 @@ def parse_har(domain):
 
         ''' Insert requests into Request Table'''
         request_query = "INSERT INTO Entries(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time, " \
-                        "RequestHeaderSize, RequestBodySize, ResponseHeaderSize, ResponseBodySize, ResponseStatus," \
+                        "RequestHeadersSize, RequestBodySize, ResponseHeadersSize, ResponseBodySize, ResponseStatus," \
                         "ResponseTransferSize, ContentType) " \
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         count = 1
@@ -166,7 +166,7 @@ def parse_har(domain):
             wait = request.wait
             receive = request.receive
             ssl = request.ssl
-            requestHeaderSize = request.requestHeadersSize
+            requestHeadersSize = request.requestHeadersSize
             requestBodySize = request.requestBodySize
             responseHeadersSize = request.requestHeadersSize
             responseBodySize = request.responseBodySize
@@ -176,7 +176,7 @@ def parse_har(domain):
 
 
             #args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
-            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl, requestHeaderSize,
+            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl, requestHeadersSize,
                           requestBodySize, responseHeadersSize, responseBodySize, responseStatus,
                     responseTransferSize, contentType)
             cursor.execute(request_query, args)
