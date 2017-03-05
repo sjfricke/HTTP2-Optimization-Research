@@ -166,8 +166,19 @@ def parse_har(domain):
             wait = request.wait
             receive = request.receive
             ssl = request.ssl
+            requestHeaderSize = request.requestHeadersSize
+            requestBodySize = request.requestBodySize
+            responseHeadersSize = request.requestHeadersSize
+            responseBodySize = request.responseBodySize
+            responseStatus = request.responseStatus
+            responseTransferSize = request.responseTransferSize
+            contentType = request.contentType
 
-            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
+
+            #args = (domain, url, blocked, dns, connect, send, wait, receive, ssl)
+            args = (domain, url, blocked, dns, connect, send, wait, receive, ssl, requestHeaderSize,
+                          requestBodySize, responseHeadersSize, responseBodySize, responseStatus,
+                    responseTransferSize, contentType)
             cursor.execute(request_query, args)
             print 'Inserting Request: ', count, ' ', url
             count += 1
