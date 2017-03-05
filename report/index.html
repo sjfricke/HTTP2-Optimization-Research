@@ -1,0 +1,53 @@
+<html>
+
+<head> 
+	<title>HTTP2 Optimization</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="header center">
+	<h1>HTTP2 Optimization</h1>
+	<h2> Research conducted by Spencer Fricke, Christian Krueger, and Emmanuel Contreras Guzman at the University of Wisconsin Madison </h2>
+</div>
+
+<div class="intro">
+	<h2>THE GOAL:</h2>
+	<p>
+		With the push to get people on board using HTTP/2 over HTTP/1.1 there is some uncertainty about the most <strong>optimal</strong> way to package your website. You may be aware it was a common hack to concat and minify all your javascript into a single file and send it over, but this defeats the purpose of caching the files. You also don't see any performance gain from bundling the files together. This is where the real questions comes in: 
+	</p>
+
+	<p class="prompts">
+		<ul>
+			<li>
+				If my site contains 1 MB worth of assets (JavaScript, CSS, images, etc.) is it better to send it as:
+				<ul>
+					<li>1 file at 1 MB</li>
+					<li>1024 files at 1 KB each</li>
+					<li>Somewhere in between</li>
+				</ul>
+			</li>
+
+			<li>If the answer is somewhere in between, is it a predictable value?</li>
+		
+			<li>Is the order in your HTML referencing of the different sized files make a difference?</li>
+		
+			<li>Is any of this dependent on the server framework being used? (Nginx vs Apache)</li>
+		
+			<li>Is any of this dependent on the browser being used? (Chrome vs Firefox)</li>
+
+			<li>Is the amount of latency matter? (Ethernet vs Wi-Fi vs 3G/4G)</li>
+		</ul>
+	</p>
+
+	<h2> How we went about it </h2>
+	<p>
+
+	</p>
+
+</div>
+
+<body>
+
+</html>
