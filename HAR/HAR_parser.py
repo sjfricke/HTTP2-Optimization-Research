@@ -11,7 +11,9 @@ import sys
 class Request:
     requestCount = 0
 
-    def __init__(self, domain, url,blocked,dns,connect,send,wait, receive, ssl):
+    def __init__(self, domain, url,blocked,dns,connect,send,wait, receive, ssl, requestHeadersSize,
+                 requestBodySize, responseHeadersSize, responseBodySize, responseStatus, responseTransferSize,
+                 contentType):
         self.domain = domain
         self.url = url
         self.blocked = blocked
@@ -21,6 +23,14 @@ class Request:
         self.wait = wait
         self.receive = receive
         self.ssl = ssl
+        self.requestHeadersSize = requestHeadersSize
+        self.requestBodySize = requestBodySize
+        self.responseHeadersSize = responseHeadersSize
+        self.responseBodySize = responseBodySize
+        self.responseStatus = responseStatus
+        self.responseTransferSize = responseTransferSize
+        self.contentType = contentType
+
         Request.requestCount += 1
 
     def get_total_requests(self):
@@ -35,14 +45,17 @@ def parse_har(domain):
         data = json.load(data_file)
 
     """ Website Table Fields """
-    domain = domain
+    domain = ''
     NumberOfFiles = 0
-    RequestOrder = 'NONE'  # TODO How to determine Request Order?
     FirstLoad = True
     OnContentLoad = 0
     OnLoad = 0
 
-    """ Request Table Fields"""
+    #file name = 2, request order = 3
+    if len(sys.argv) == 3:
+        RequestOrder = sys.argv[2]
+
+    """ Entries  Table Fields"""
     # url = ''
     # blocked = 0
     # dns = 0
@@ -51,11 +64,17 @@ def parse_har(domain):
     # wait = 0
     # receive = 0
     # ssl = 0
-
+    # requestHeaderSize
+    # requestBodySize
+    # responseBodySize
+    # responseStatus
+    # responseTransferSize
+    # contentType
     entries = data['log']['entries']
 
     # Array of requests to insert into DB
     requests_for_sql = []
+    domain = data['log']['pages'][0]['title']
     NumberOfFiles = len(entries)
     OnContentLoad = data['log']['pages'][0]['pageTimings']['onContentLoad']
     OnLoad = data['log']['pages'][0]['pageTimings']['onLoad']
@@ -82,8 +101,23 @@ def parse_har(domain):
         receive = timings['receive']
         ssl = timings['ssl']
 
+        ## Request Info
+        requestHeaderSize = entry['request']['headersSize']
+        requestBodySize = entry['request']['bodySize']
+
+        ## Response Info
+        responseHeadersSize = entry['response']['headersSize']
+        responseBodySize = entry['response']['bodySize']
+        responseStatus = entry['response']['status']
+        responseTransferSize = entry['response']['_transferSize'] # TODO Check if this is also in SCRIPT_har
+        contentType = ''
+        for i in entry['response']['headers']:
+            if i['name'] == 'content-type':
+                contentType = i['value']
+
         # Create request object and add to list
-        req = Request(domain, url, blocked, dns, connect, send,  wait, receive, ssl)
+        req = Request(domain, url, blocked, dns, connect, send,  wait, receive, ssl, requestHeaderSize, requestBodySize,
+                      responseHeadersSize, responseBodySize, responseStatus, responseTransferSize, contentType)
         requests_for_sql.append(req)
 
     print 'Done Parsing HAR File'
@@ -118,7 +152,9 @@ def parse_har(domain):
         print 'Finished inserting into Website'
 
         ''' Insert requests into Request Table'''
-        request_query = "INSERT INTO Request(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time) " \
+        request_query = "INSERT INTO Request(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time, " \
+                        "RequestHeaderSize, RequestBodySize, ResponseHeaderSize, ResponseBodySize, ResponseStatus," \
+                        "ResponseTransferSize, ContentType) " \
                         "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         count = 1
         for request in requests_for_sql:
@@ -149,11 +185,7 @@ def parse_har(domain):
 if __name__ == '__main__':
 
     # Get File and Parse JSON
-    # TODO Load file from command line
     cur_path = os.path.dirname(__file__)
     fileName = sys.argv[1]
-    #location = 'HAR_test_files/'
-    #filePath = location + fileName
     domain = os.path.relpath(fileName, cur_path)
-    #domain = os.path.relpath('HAR_test_files/www.facebook.com.har', cur_path)
     parse_har(domain)
