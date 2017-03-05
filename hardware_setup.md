@@ -12,8 +12,8 @@
   
  * Servers
   * `node1` running Nginx 
-    * [spencerfricke.com:2001](http://spencerfricke.com:2001)
+    * [http2optimization.com:2001](http://http2optimization.com:2001)
   * `node2` running Apache 
-    * [spencerfricke.com:2002](http://spencerfricke.com:2002)
+    * [http2optimization.com:2002](http://http2optimization.com:2002)
 
 
