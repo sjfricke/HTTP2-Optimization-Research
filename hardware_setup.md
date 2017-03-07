@@ -15,5 +15,6 @@
     * [http2optimization.com:2001](http://http2optimization.com:2001)
   * `node2` running Apache 
     * [http2optimization.com:2002](http://http2optimization.com:2002)
+  * To make things simpler routing the SSL Certificate, testing will be done on one server at a time, therefore [http2optimization.com](http://http2optimization.com) will bring you to node 1
 
 
