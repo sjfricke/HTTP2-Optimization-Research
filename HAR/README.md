@@ -19,15 +19,23 @@ https://dev.mysql.com/downloads/connector/python/2.1.html
 ##Python connect to DB
 http://www.mysqltutorial.org/python-connecting-mysql-databases/
 
+
 ##Inserting into SQLdb usign mysql Connector
 http://www.mysqltutorial.org/python-mysql-insert/
+
+## Link to Report 
+http://http2optimization.com/
+
+##Json Lint
+Useful in cleaning up HAR file collected through script
+http://jsonlint.com/
 
 
 DB Scheme:
 * Website
  * Domain -- accessed websites domain
  * NumberOfFiles -- total number of files
- * RequestedOrder - ASC, DESC, NONE
+ * RequestedOrder - 0-5, -1 for error 
  * FirstLoad - True if yes, else no
 
 
