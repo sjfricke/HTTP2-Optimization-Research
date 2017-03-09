@@ -39,9 +39,9 @@ class Request:
 """ HAR PARSER """
 
 
-def parse_har(domain):
+def parse_har(har_file):
 
-    with open(domain) as data_file:
+    with open(har_file) as data_file:
         data = json.load(data_file)
 
     """ Website Table Fields """
@@ -51,9 +51,12 @@ def parse_har(domain):
     OnContentLoad = 0
     OnLoad = 0
 
+    #Get RequestOrder
     #file name = 2, request order = 3
     if len(sys.argv) == 3:
         RequestOrder = sys.argv[2]
+    else:
+        RequestOrder = -1
 
     """ Entries  Table Fields"""
     # url = ''
@@ -72,15 +75,16 @@ def parse_har(domain):
     # contentType
     entries = data['log']['entries']
 
-    # Array of requests to insert into DB
+    # Array of entries to insert into DB
     requests_for_sql = []
+
+    # Get Fields :
     domain = data['log']['pages'][0]['title']
     NumberOfFiles = len(entries)
     OnContentLoad = data['log']['pages'][0]['pageTimings']['onContentLoad']
     OnLoad = data['log']['pages'][0]['pageTimings']['onLoad']
 
-
-    # Iterate through entries/files downloaded
+    # Iterate through entries aka requests/files downloaded
     for entry in entries:
 
         # Is request cached
@@ -120,7 +124,7 @@ def parse_har(domain):
                       responseHeadersSize, responseBodySize, responseStatus, responseTransferSize, contentType)
         requests_for_sql.append(req)
 
-    print 'Done Parsing HAR File'
+    print 'Done Collecting HAR File Fields'
 
     """ Connect and INSERT to MySQL database """
 
@@ -134,7 +138,7 @@ def parse_har(domain):
             print('Connected to MySQL database')
 
         """Inserting Into DB"""
-        print 'Inserting into DB'
+        print 'Inserting into Website Table'
 
         cursor = conn.cursor()
 
@@ -149,9 +153,11 @@ def parse_har(domain):
         else:
             print('last insert id not found')
         conn.commit()
-        print 'Finished inserting into Website'
+
+        print 'Finished inserting into Website Table'
 
         ''' Insert requests into Request Table'''
+        print 'Inserting into Entries Table'
         request_query = "INSERT INTO Entries(Domain, Url, Blocked, DNS, Connected, Send, Wait, Receive, SSL_time, " \
                         "RequestHeadersSize, RequestBodySize, ResponseHeadersSize, ResponseBodySize, ResponseStatus," \
                         "ResponseTransferSize, ContentType) " \
@@ -191,11 +197,11 @@ def parse_har(domain):
         conn.close()
         cursor.close()
 
-    print "Parsed File Successfully"
+    print "End of Parser"
 
 if __name__ == '__main__':
 
-    # Get File and Parse JSON
+    # Get filename and pass to parser method
     cur_path = os.path.dirname(__file__)
     fileName = sys.argv[1]
     domain = os.path.relpath(fileName, cur_path)
