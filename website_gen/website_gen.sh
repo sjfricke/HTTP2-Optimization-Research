@@ -5,7 +5,7 @@ print_help() {
 	echo -e "
 	#----------------------------------------------------------------------------
 	### usage (all intputs are ints except for alternate options)
-	\e[32m./website_gen.sh\e[0m \e[33mNumberofObjects/\e[93mAlternateOption\e[0m \e[36mObjectStructure\e[0m \e[35mObjectType\e[0m \e[94mMinSizeObject\e[0m \e[34mMaxSizeObject\e[0m \e[97mBS\e[0m
+	\e[32m./website_gen.sh\e[0m \e[33mNumberofObjects/\e[93mAlternateOption\e[0m \e[36mObjectStructure\e[0m \e[35mObjectType\e[0m \e[94mMinSizeObject\e[0m \e[34mTotalWebsiteSize\e[0m \e[97mBS\e[0m
 
 	\e[93m#Alternate Options\e[0m
 	\e[92m##-help prints this page
@@ -26,15 +26,18 @@ print_help() {
 	## 3 All garbage ahref
 	## 4 Random types (multiple of each)
 
-	\e[94m#ObjectMinSize - how small in bytes
+	\e[94m#ObjectMinSize - how small in bytes - Only used for random number generator
 
-	\e[34m#ObjectMaxSize - how large in bytes
+	\e[34m#TotalWebsiteSize - how large in bytes (TotalWebsiteSize = Sum(objectsizes))
 
-	\e[97m#BS - buffer strategy for dd\e[0m
+	\e[97m#BS - buffer strategy for dd - BE CAREFUL WITH THIS\e[0m
 
 	###Note 
-	#For ObjectStructure 1,2,3 the size of the files will be assigned
-	#a size from min size to max size with a diffrence of (max - min)/#ofObjects
+	#Sizes of the objects will be as following:
+	All Max size = (TotalWebsiteSize / NumberOfObjects)
+	Asc/Desc = (TotalWebsiteSize/(NumberofObjects^2 + NumberofObjects)) * n where n = 1 to = NumberofObjects
+	Dont ask why, its because MATH
+	Random = (RANDOM % TotalWebSize) and subract that number from TotalWebSize
 
 	\e[8mChristian Rules\e[0m
 
@@ -79,7 +82,7 @@ OBJ_COUNT=$1
 OBJ_STRUCT=$2
 OBJ_TYPE=$3
 OBJ_MIN_SIZE=$4
-OBJ_MAX_SIZE=$5
+WEB_MAX_SIZE=$5
 BS=$6
 
 ### directory gen
@@ -107,24 +110,30 @@ echo "<header></header>" >> $INDEX_FP
 echo "<body><h1>Chuck Likes Vim</h1>" >> $INDEX_FP
 
 ### object gen
-OBJ_DIF=$(( OBJ_MAX_SIZE - OBJ_MIN_SIZE ))
-
 case "$OBJ_TYPE" in
 0)#All js
 	for i in `seq 1 $OBJ_COUNT`;
 	do
 		case "$OBJ_STRUCT" in
 		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) 				
 		;;
 		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*i) /BS ))
 		;;
 		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
+			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS ))
 		;;
 		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
+			if [ $i != $OBJ_COUNT ];
+			then
+				TEMP_SIZE=$( python -c "import random; print random.randrange($OBJ_MIN_SIZE, $WEB_MAX_SIZE);" )
+				TEMP_SIZE=$(( TEMP_SIZE / BS ))
+				dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$TEMP_SIZE
+				WEB_MAX_SIZE=$(( WEB_MAX_SIZE - (TEMP_SIZE * BS) ))
+			else
+				dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( WEB_MAX_SIZE / BS ))
+			fi
 		;;
 		esac		
 		echo "<script src='object$i".js"'></script>" >> $INDEX_FP
@@ -208,7 +217,7 @@ case "$OBJ_TYPE" in
 		;;
 		esac	
 		
-		case "$(( RANDOM % 4 ))" in 
+		case "$(( RANDOM % 3 ))" in 
 		0)
 			echo "<script src='object$i'></script>" >> $INDEX_FP
 		;;
@@ -217,9 +226,6 @@ case "$OBJ_TYPE" in
 		;;
 		2)
 			echo "<img src='object$i'>" >> $INDEX_FP
-		;;
-		3)
-			echo "<a href='object$i' download>Click Me! ;)</a>" >> $INDEX_FP
 		;;
 		esac	
 	done
