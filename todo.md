@@ -7,20 +7,26 @@
   * Fix bugs if found
   * Test different case
   * ~~Make sure file permission is correct~~  
+  * make `input.txt` file with all input
 * Script to call script #ScriptScript **Christian Overlord**
 * Simulate loading the sites and getting HAR data **Spencer**
-  * Run headless Chrome
+  * ~~Run headless Chrome~~
   * Run headless FireFox
-* http2 on apache **Christian Overlord** 
-  * `node2.local`
-* http2 on Nginx **Spencer**
-  * `node1.local`  
+* ~~http2 on apache **Christian Overlord**~~ **Will do later**
+  * ~~`node2.local`~~
+* ~~http2 on Nginx **Spencer**~~
+  * ~~`node1.local`~~  
 * Make sure #ScriptScript works on Nginx (node1) **Spencer**
 * Sorting/Parse and getting data from HAR files **Emmanuel**
   * ~~Store into database~~
   * Add to tables
   * Add parameters to script
-* Setup storage on Pi and Server **Spencer**
+  * Allow for parameters with flags
+     * database server ip
+     * type of site (ascending, descending, random, etc)
+     * which HAR file
+  * Document parameter choices
+* ~~Setup storage on Pi and Server **Spencer**~~
 * ~~setup a MySQL database **Spencer**~~
 * ~~setup website for node1/2 server **Spencer**~~
 * Random website but same total size **Christian Overlord**
