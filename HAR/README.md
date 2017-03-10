@@ -1,5 +1,5 @@
 # HAR Headless Parser
-This tool is used to automatically grab the HAR files from Chromium and then send them off to a database where they will be quried and anylisised after. 
+This tool is used to automatically grab the HAR files from Chromium and then send them off to a database where they will be queried and analise after. 
 
 * Headless == running without a graphical interface, like in a terminal
 
