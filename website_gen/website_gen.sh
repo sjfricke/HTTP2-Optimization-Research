@@ -5,7 +5,7 @@ print_help() {
 	echo -e "
 	#----------------------------------------------------------------------------
 	### usage (all intputs are ints except for alternate options)
-	\e[32m./website_gen.sh\e[0m \e[33mNumberofObjects/\e[93mAlternateOption\e[0m \e[36mObjectStructure\e[0m \e[35mObjectType\e[0m \e[94mMinSizeObject\e[0m \e[34mTotalWebsiteSize\e[0m \e[97mBS\e[0m
+	\e[32m./website_gen.sh\e[0m \e[93mAlternateOption/\e[0m\e[33mNumberofObjects \e[36mObjectStructure\e[0m \e[35mObjectType\e[0m \e[94mMinSizeObject\e[0m \e[34mTotalWebsiteSize\e[0m \e[97mBS\e[0m \e[31mWebsiteName\e[0m
 
 	\e[93m#Alternate Options\e[0m
 	\e[92m##-help prints this page
@@ -32,6 +32,8 @@ print_help() {
 
 	\e[97m#BS - buffer strategy for dd - BE CAREFUL WITH THIS\e[0m
 
+	\e[31m#WebsiteName - Custom name of website used by script script \e[0m
+
 	###Note 
 	#Sizes of the objects will be as following:
 	All Max size = (TotalWebsiteSize / NumberOfObjects)
@@ -47,9 +49,9 @@ print_help() {
 }
 
 purge() {
-	rm -rf /var/www/html/*
+	rm -R `ls -1 -d /var/www/html/*/` #deletes all directories
 	rm $COUNT_FP
-	rm $WEB_LIST
+	rm $WEB_LIST_FP
 	return 0
 }
 
@@ -86,6 +88,7 @@ OBJ_TYPE=$3
 OBJ_MIN_SIZE=$4
 WEB_MAX_SIZE=$5
 BS=$6
+WEB_NAME=$7
 
 ### directory gen
 if [ -a $COUNT_FP ]
@@ -98,20 +101,20 @@ if [ -a $COUNT_FP ]
 		echo 0 > $COUNT_FP
 fi
 
-WEB_FP=$MAIN_WEB_FP"html/"$WEB_NUM
+WEB_FP=$MAIN_WEB_FP"html/"$WEB_NAME
 
 mkdir $WEB_FP
 INDEX_FP=$WEB_FP"/index.html" 
 OBJECT_FP=$WEB_FP"/object" 
 
 ### web list addition
-echo "https://http2optimization.com/"$WEB_NUM >> $WEB_LIST_FP
+echo "https://http2optimization.com/"$WEB_NAME >> $WEB_LIST_FP
 
 ### html gen start
 echo $HTML_DOCTYPE > $INDEX_FP
 echo "<html>" >> $INDEX_FP
-echo "<header></header>" >> $INDEX_FP
-echo "<body><h1>Chuck Likes Vim</h1>" >> $INDEX_FP
+echo "<header>$WEB_NAME</header>" >> $INDEX_FP
+echo "<body><h1>CHUCK RULES</h1>" >> $INDEX_FP
 
 #clears list for random tracking
 unset LIST
