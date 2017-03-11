@@ -37,7 +37,7 @@ print_help() {
 	All Max size = (TotalWebsiteSize / NumberOfObjects)
 	Asc/Desc = (TotalWebsiteSize/(NumberofObjects^2 + NumberofObjects)) * n where n = 1 to = NumberofObjects
 	Dont ask why, its because MATH
-	Random = (RANDOM % TotalWebSize) and subract that number from TotalWebSize
+	Random = Same generation as Asc but placed in a random order
 
 	\e[8mChristian Rules\e[0m
 
@@ -49,12 +49,14 @@ print_help() {
 purge() {
 	rm -rf /var/www/html/*
 	rm $COUNT_FP
+	rm $WEB_LIST
 	return 0
 }
 
 ###Constants
 MAIN_WEB_FP="/var/www/"
 COUNT_FP=$MAIN_WEB_FP".web_count"
+WEB_LIST_FP=$MAIN_WEB_FP"web_list"
 HTML_DOCTYPE="<!DOCTYPE thml>"
 
 ###Error Checking
@@ -77,7 +79,7 @@ case "$OPTION" in
 ;;
 esac
 
-###Input Paramaeters
+### Input Paramaeters
 OBJ_COUNT=$1
 OBJ_STRUCT=$2
 OBJ_TYPE=$3
@@ -86,7 +88,6 @@ WEB_MAX_SIZE=$5
 BS=$6
 
 ### directory gen
-
 if [ -a $COUNT_FP ]
 	then 
 		WEB_NUM="$(cat $COUNT_FP)"
@@ -103,134 +104,80 @@ mkdir $WEB_FP
 INDEX_FP=$WEB_FP"/index.html" 
 OBJECT_FP=$WEB_FP"/object" 
 
+### web list addition
+echo "https://http2optimization.com/"$WEB_NUM >> $WEB_LIST_FP
+
 ### html gen start
 echo $HTML_DOCTYPE > $INDEX_FP
 echo "<html>" >> $INDEX_FP
 echo "<header></header>" >> $INDEX_FP
 echo "<body><h1>Chuck Likes Vim</h1>" >> $INDEX_FP
 
+#clears list for random tracking
+unset LIST
+
 ### object gen
-case "$OBJ_TYPE" in
-0)#All js
-	for i in `seq 1 $OBJ_COUNT`;
-	do
-		case "$OBJ_STRUCT" in
-		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) 				
-		;;
-		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*i) /BS ))
-		;;
-		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS ))
-		;;
-		3)#Random
-			if [ $i != $OBJ_COUNT ];
-			then
-				TEMP_SIZE=$( python -c "import random; print random.randrange($OBJ_MIN_SIZE, $WEB_MAX_SIZE);" )
-				TEMP_SIZE=$(( TEMP_SIZE / BS ))
-				dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$TEMP_SIZE
-				WEB_MAX_SIZE=$(( WEB_MAX_SIZE - (TEMP_SIZE * BS) ))
-			else
-				dd if=/dev/urandom of=$OBJECT_FP$i".js" bs=$BS count=$(( WEB_MAX_SIZE / BS ))
-			fi
-		;;
-		esac		
-		echo "<script src='object$i".js"'></script>" >> $INDEX_FP
-	done
-;;
-1)#All css
-	for i in `seq 1 $OBJ_COUNT`;
-	do
-		case "$OBJ_STRUCT" in
-		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
-		;;
-		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i".css" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
-		;;
-		esac		
-		echo "<link rel='stylesheet' property='stylesheet' href='object$i".css"'>" >> $INDEX_FP
-	done
-;;
-2)#All img 
-	for i in `seq 1 $OBJ_COUNT`;
-	do
-		case "$OBJ_STRUCT" in
-		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
-		;;
-		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i".png" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
-		;;
-		esac		
-		echo "<img src='object$i".png"'>" >> $INDEX_FP
-	done
-;;
-3)#All garbage
-	for i in `seq 1 $OBJ_COUNT`;
-	do
-		case "$OBJ_STRUCT" in
-		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
-		;;
-		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i".totallynotavirus" bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
-		;;
-		esac		
-		echo "<a href='object$i".totallynotavirus"' download>Click ME! Totally not a Virus #$i</a>" >> $INDEX_FP
-	done
-;;
-4)#Random
-	for i in `seq 1 $OBJ_COUNT`;
-	do
-		case "$OBJ_STRUCT" in
-		0)#All Max size
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( OBJ_MAX_SIZE/BS )) 				
-		;;
-		1)#Ascending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MIN_SIZE + i*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		2)#Descending order
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( (OBJ_MAX_SIZE - (i - 1)*( OBJ_DIF )/OBJ_COUNT) /BS ))				
-		;;
-		3)#Random
-			dd if=/dev/urandom of=$OBJECT_FP$i bs=$BS count=$(( ( (RANDOM % (OBJ_MAX_SIZE - OBJ_MIN_SIZE)) + OBJ_MIN_SIZE) /BS ))				
-		;;
-		esac	
-		
+for i in `seq 1 $OBJ_COUNT`;
+do
+	case "$OBJ_TYPE" in
+	0)#ALL js
+		echo "<script src='object$i.js'></script>" >> $INDEX_FP
+		FT=".js"
+	;;
+	1)#ALL css
+		echo "<link rel='stylesheet' property='stylesheet' href='object$i.css'>" >> $INDEX_FP
+		FT=".css"
+	;;
+	2)#ALL img
+		echo "<img src='object$i.png'>" >> $INDEX_FP
+		FT=".png"
+	;;
+	3)#ALL garbage links
+		echo "<a href='object$i.totallynotavirus' download>Click ME! Totally not a Virus #$i</a>" >> $INDEX_FP
+		FT=".totallynotavirus"
+	;;
+	4)#ALL Random
 		case "$(( RANDOM % 3 ))" in 
 		0)
-			echo "<script src='object$i'></script>" >> $INDEX_FP
+			echo "<script src='object$i.js'></script>" >> $INDEX_FP
+			FT=".js"
 		;;
 		1)
-			echo "<link rel='stylesheet' property='stylesheet' href='object$i'>" >> $INDEX_FP
+			echo "<link rel='stylesheet' property='stylesheet' href='object$i.css'>" >> $INDEX_FP
+			FT=".css"
 		;;
 		2)
-			echo "<img src='object$i'>" >> $INDEX_FP
+			echo "<img src='object$i.png'>" >> $INDEX_FP
+			FT=".png"
 		;;
-		esac	
-	done
-;;
-esac
+		esac
+	;;	
+	esac
+	case "$OBJ_STRUCT" in
+	0)#All Max size
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) 				
+	;;
+	1)#Ascending order
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*i) /BS ))
+	;;
+	2)#Descending order
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS ))
+	;;
+	3)#Random
+		RAND=$( python -c "import random; print random.randrange(1, $(( OBJ_COUNT + 1 )) );" )
+		while [ $(( LIST[RAND] )) == 1 ]; do
+			if (( RAND >= OBJ_COUNT ));
+			then
+				RAND=1		
+			else
+				RAND=$(( RAND + 1 ))
+			fi
+		done
+		LIST[$RAND]=1
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*RAND) /BS ))
+	;;
+	esac	
+done
 
 ### html gen end
 echo "</body></html>" >> $INDEX_FP
