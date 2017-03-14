@@ -13,14 +13,20 @@ Usage: node HAR_Headless_Parser [options]...
 Options:
 
   -h, --help           Output usage information
-  -d, --database       IP address for database
-  -i, --input          File of input list in line-by-line fashion
-  -p, --port <port>    Remote Debugging Protocol port
-  -o, --output <file>  Dump to folder instead of HAR_Generate folder
-  -v, --verbose        Enable verbose output on stderr
+  -d, --db <name>      Name of database to store data *[Will prompt otherwise]*
+      --dbhost <IP>    IP address for database *[Will prompt otherwise]*
+      --dbuser <user>  User of database *[Will prompt otherwise]*
+      --dbpass <pass>  Password of database *[Will prompt otherwise]*
+  -i, --input <file>   File of website input list in line-by-line fashion *[Will prompt otherwise]*
+  -p, --port <port>    Remote Debugging Protocol port *[Default: 9222]*
+  -o, --output <file>  Dump to folder instead of HAR_Generate folder *[Defult: ./]*
+  -v, --verbose        Enable verbose output on stdout
 ```
 
 ## What you need installed (your favorite part right!)
+* You will need to make sure you have a MySQL database to send the data too
+  * **NOTE:** the machine running this parser doesn't need to have the database
+  * We may add support for more DB options in future
 * First you will need python as the parsing tool is ran in python
 * You will need the [HAR_parser.py](./HAR_parser/HAR_parser.py) script in this directory or in the [HAR Parser subfolder](./HAR_parser)
 * You will need [Node.js](https://nodejs.org/en/) which is used to run the main script
