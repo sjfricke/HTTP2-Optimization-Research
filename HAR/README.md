@@ -2,6 +2,23 @@
 This tool is used to automatically grab the HAR files from Chromium and then send them off to a database where they will be queried and analise after. 
 
 * Headless == running without a graphical interface, like in a terminal
+* - [What you need installed (your favorite part right!)](#what-you-need-installed-your-favorite-part-right)
+* - [How to run](#how-to-run)
+
+## How to use
+
+```
+Usage: node HAR_Headless_Parser [options]...
+
+Options:
+
+  -h, --help           Output usage information
+  -d, --database       IP address for database
+  -i, --input          File of input list in line-by-line fashion
+  -p, --port <port>    Remote Debugging Protocol port
+  -o, --output <file>  Dump to folder instead of HAR_Generate folder
+  -v, --verbose        Enable verbose output on stderr
+```
 
 ## What you need installed (your favorite part right!)
 * First you will need python as the parsing tool is ran in python
