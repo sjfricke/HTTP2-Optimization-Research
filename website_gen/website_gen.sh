@@ -59,7 +59,7 @@ purge() {
 MAIN_WEB_FP="/var/www/"
 COUNT_FP=$MAIN_WEB_FP".web_count"
 WEB_LIST_FP=$MAIN_WEB_FP"web_list"
-HTML_DOCTYPE="<!DOCTYPE thml>"
+HTML_DOCTYPE="<!DOCTYPE html>"
 
 ###Error Checking
 if [[ $# -eq 0 ]] ; then
