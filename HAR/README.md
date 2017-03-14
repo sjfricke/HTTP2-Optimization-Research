@@ -13,13 +13,12 @@ Usage: node HAR_Headless_Parser [options]...
 Options:
 
   -h, --help           Output usage information
-  -d, --db <name>      Name of database to store data *[Will prompt otherwise]*
       --dbhost <IP>    IP address for database *[Will prompt otherwise]*
       --dbuser <user>  User of database *[Will prompt otherwise]*
       --dbpass <pass>  Password of database *[Will prompt otherwise]*
+      --dbname <name>  Name of database to store data *[Will prompt otherwise]*
   -i, --input <file>   File of website input list in line-by-line fashion *[Will prompt otherwise]*
   -p, --port <port>    Remote Debugging Protocol port *[Default: 9222]*
-  -o, --output <file>  Dump to folder instead of HAR_Generate folder *[Defult: ./]*
   -v, --verbose        Enable verbose output on stdout
 ```
 
