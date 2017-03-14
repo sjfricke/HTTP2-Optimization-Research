@@ -14,6 +14,7 @@ var INPUT_FILE; // where to grab the websites
 var PORT = 9222; // for chrome-har-captuer 
 var VERBOSE = false; // when you want your terminal spammed 
 var DEBUG = false; // used for turning on debug output
+var WEBSITE_LIST; // array of websites to scan
 
 /********************************************
 Param Checking and Validation
@@ -59,6 +60,15 @@ if (argv.dbname) {
 // -i, --input
 if (argv.i || argv.input) {
     INPUT_FILE = argv.input || argv.i;
+    if (!fs.existsSync(INPUT_FILE)) {
+	console.log("Input file does not exist!");
+	while (!INPUT_FILE) {
+	    INPUT_FILE = readlineSync.question("Enter input file: ");
+	    if (!fs.existsSync(INPUT_FILE)) {
+		console.log("File does not exist!");
+	    }
+	}
+    }
 } else {
     while (!INPUT_FILE) {
 	INPUT_FILE = readlineSync.question("Enter input file: ");
@@ -67,6 +77,8 @@ if (argv.i || argv.input) {
 	}
     }
 }
+// parse file into array from line-by-line
+WEBSITE_LIST = fs.readFileSync(INPUT_FILE).toString().split("\n");
 
 // -p, --port
 if (argv.p || argv.port) { PORT = argv.port || argv.p; } 
@@ -79,21 +91,28 @@ if (argv.debug) { DEBUG = true; }
     
 /********************************************
 
-********************************************/
-//var c = chc.load(['https://http2optimization.com/']);
+ ********************************************/
+//var HAR_LOAD = new Array(10);
+//for (var i = 0; i<10; i++) {
+HAR_LOAD = chc.load([WEBSITE_LIST[0], WEBSITE_LIST[1], WEBSITE_LIST[2], WEBSITE_LIST[3], WEBSITE_LIST[4]]);
 
-/*
-c.on('connect', function () {
-    console.log('Connected to Chrome');
-});
-c.on('end', function (har) {
-    fs.writeFileSync('test.har', JSON.stringify(har));
+    HAR_LOAD.on('connect', function () {
+	console.log('Connected to Chrome for ');
+    });
 
-});
-c.on('error', function (err) {
-    console.error('Cannot connect to Chrome: ' + err);
-});
-*/
+    HAR_LOAD.on('end', function (har) {
+	//TODO, more robust way to find
+	//var temp = WEBSITE_LIST[i].substring(WEBSITE_LIST[i].indexOf("./com/")  + 5, WEBSITE_LIST[i].length-1)
+	fs.writeFileSync( 'all.har', JSON.stringify(har));
+	//test(temp);
+    });
+
+    HAR_LOAD.on('error', function (err) {
+	console.error('Cannot connect to Chrome from ' +  i  +  ': ' + err);
+    });
+//}
+
+function test(temp) { console.log(temp); }
 
 /*
 * Used to print out options supported
