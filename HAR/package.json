@@ -19,6 +19,7 @@
   "dependencies": {
     "chrome-har-capturer": "^0.9.3",
     "minimist": "^1.2.0",
+    "mysql": "^2.13.0",
     "readline-sync": "^1.4.6"
   }
 }
