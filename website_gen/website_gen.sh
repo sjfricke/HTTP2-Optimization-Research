@@ -158,13 +158,13 @@ do
 	esac
 	case "$OBJ_STRUCT" in
 	0)#All Max size
-		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) 				
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) >& /dev/null	
 	;;
 	1)#Ascending order
-		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*i) /BS ))
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*i) /BS )) >& /dev/null
 	;;
 	2)#Descending order
-		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS ))
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS )) >& /dev/null
 	;;
 	3)#Random
 		RAND=$( python -c "import random; print random.randrange(1, $(( OBJ_COUNT + 1 )) );" )
@@ -177,7 +177,7 @@ do
 			fi
 		done
 		LIST[$RAND]=1
-		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*RAND) /BS ))
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*RAND) /BS )) >& /dev/null
 	;;
 	esac	
 done
@@ -189,4 +189,5 @@ echo "</body></html>" >> $INDEX_FP
 chmod 644 -R $WEB_FP
 chmod 755 $WEB_FP
 
+echo $WEB_NAME" DONE"
 

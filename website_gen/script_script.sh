@@ -22,7 +22,7 @@ S2=1000000
 S3=2000000
 S4=4000000
 S5=8000000
-S6=1000000000
+S6=100000000
 
 ### OBJECT COUNTS
 C0=3
@@ -77,31 +77,31 @@ do
                 case "$j" in
                 0)
 			SIZE=$S0
-			BS=10
+			BS=1
                 ;;
 		1)
 			SIZE=$S1
-			BS=10
+			BS=1
                 ;;
                 2)
 			SIZE=$S2
-			BS=100
+			BS=1
                 ;;
 		3)
 			SIZE=$S3
-			BS=1000
+			BS=100
                 ;;
                 4)
 			SIZE=$S4
-			BS=1000
+			BS=100
                 ;;
 		5)
 			SIZE=$S5
-			BS=1000
+			BS=100
                 ;;
 		6)
 			SIZE=$S6
-			BS=10000
+			BS=1000
                 ;;
                 esac
                 for k in `seq 0 6`; #COUNT
@@ -152,7 +152,7 @@ do
 				esac
 
 				### ACTUAL GENERATION
-				echo ./website_gen.sh $COUNT $OBJECT_STRUCTURE $OBJECT_TYPE 0 $SIZE $BS $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3
+				./website_gen.sh $COUNT $OBJECT_STRUCTURE $OBJECT_TYPE 0 $SIZE $BS $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3
                         done
                 done
         done
