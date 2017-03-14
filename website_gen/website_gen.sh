@@ -108,7 +108,7 @@ INDEX_FP=$WEB_FP"/index.html"
 OBJECT_FP=$WEB_FP"/object" 
 
 ### web list addition
-echo "https://http2optimization.com/"$WEB_NAME >> $WEB_LIST_FP
+echo "https://http2optimization.com/"$WEB_NAME"/" >> $WEB_LIST_FP
 
 ### html gen start
 echo $HTML_DOCTYPE > $INDEX_FP
