@@ -49,7 +49,7 @@ print_help() {
 }
 
 purge() {
-	rm -R `ls -1 -d /var/www/html/*/` #deletes all directories
+	ls -1 -d /var/www/html/*/  | grep '/var/www/html/[^(css)|(js)|(images)]' | sudo xargs rm -R #deletes all directories not for report
 	rm $COUNT_FP
 	rm $WEB_LIST_FP
 	return 0
