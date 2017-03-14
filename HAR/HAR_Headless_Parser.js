@@ -5,6 +5,7 @@ const fs = require('fs'); // file system
 const chc = require('chrome-har-capturer'); // capture HAR libraru
 const argv = require('minimist')(process.argv.slice(2)); // used for easy param parsing
 const readlineSync = require('readline-sync'); // reads input synchonously
+const mysql = require('mysql');
 
 /********************************************
 Globals
@@ -32,6 +33,14 @@ if (argv.dbhost) {
 } else {
     DB_HOST = readlineSync.question("Enter IP of database: (127.0.0.1) ");
     if (DB_HOST == false) { DB_HOST = "127.0.0.1"; } //default
+}
+
+// --dbport
+if (argv.dbport) {
+    DB_PORT = argv.dbport;
+} else {
+    DB_PORT = readlineSync.question("Enter port of database: (3306) ");
+    if (DB_PORT == false) { DB_PORT = "3306"; } //default
 }
 
 // --dbuser
@@ -92,9 +101,36 @@ if (argv.debug) { DEBUG = true; }
 /********************************************
 
  ********************************************/
+var connection = mysql.createConnection({
+    host     : DB_HOST,
+    user     : DB_USER,
+    password : DB_PASS,
+    database : DB_NAME
+    port     : DB_PORT
+});
+ 
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+ 
+  console.log('connected as id ' + connection.threadId);
+});
+
+var a = 42;
+var b = "node"
+connection.query('INSERT INTO har_db.test SET value_INT = ?, value_STRING = ?', [a, b], function (error, results) {
+    if (error) throw error;
+
+    console.dir(results);
+});
+
+connection.end();
+
 //var HAR_LOAD = new Array(10);
 //for (var i = 0; i<10; i++) {
-HAR_LOAD = chc.load([WEBSITE_LIST[0], WEBSITE_LIST[1], WEBSITE_LIST[2], WEBSITE_LIST[3], WEBSITE_LIST[4]]);
+HAR_LOAD = chc.load(WEBSITE_LIST[1]);
 
     HAR_LOAD.on('connect', function () {
 	console.log('Connected to Chrome for ');
@@ -108,7 +144,7 @@ HAR_LOAD = chc.load([WEBSITE_LIST[0], WEBSITE_LIST[1], WEBSITE_LIST[2], WEBSITE_
     });
 
     HAR_LOAD.on('error', function (err) {
-	console.error('Cannot connect to Chrome from ' +  i  +  ': ' + err);
+	console.error('Cannot connect to Chrome from: ' + err);
     });
 //}
 
@@ -121,7 +157,8 @@ function print_options(){
     console.log("Usage: node HAR_Headless_Parser [options]...\n\n"+
  		"Options:\n\n"+
 		"  -h, --help           Output usage information\n"+
-		"      --dbhost <IP>    IP address for database [Will prompt otherwise]\n"+
+		"      --dbhost <IP>    IP address for database [Will prompt otherwise] [Default: 127.0.0.1]\n"+
+		"      --dbport <port>  Port on machine to access database [Will prompt otherwise] [Default: 3306]\n"+
 		"      --dbuser <user>  User of database [Will prompt otherwise]\n"+
 		"      --dbpass <pass>  Password of database [Will prompt otherwise]\n"+
 		"      --dbname <name>  Name of database to store data [Will prompt otherwise]\n"+
