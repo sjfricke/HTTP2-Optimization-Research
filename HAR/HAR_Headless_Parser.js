@@ -79,6 +79,15 @@ if (argv.i || argv.input) {
 }
 // parse file into array from line-by-line
 WEBSITE_LIST = fs.readFileSync(INPUT_FILE).toString().split("\n");
+// checks for empty lines
+for (let i = 0; i < WEBSITE_LIST.length; ) {
+    if (WEBSITE_LIST[i] == "" | WEBSITE_LIST[i] == false) {
+	WEBSITE_LIST.splice(i,1);
+    } else {
+	i++; // if spliced the i value is already the next element
+    }
+}
+
 
 // -p, --port
 if (argv.p || argv.port) { PORT = argv.port || argv.p; } 
@@ -94,11 +103,15 @@ if (argv.debug) { DEBUG = true; }
  ********************************************/
 //var HAR_LOAD = new Array(10);
 //for (var i = 0; i<10; i++) {
-HAR_LOAD = chc.load([WEBSITE_LIST[0], WEBSITE_LIST[1], WEBSITE_LIST[2], WEBSITE_LIST[3], WEBSITE_LIST[4]]);
+    HAR_LOAD = chc.load(WEBSITE_LIST);
 
     HAR_LOAD.on('connect', function () {
-	console.log('Connected to Chrome for ');
+        console.log('Connected to Chrome for ');
     });
+
+    HAR_LOAD.on('pageEnd', function(page) {
+        console.log("done with: " + page);
+    })
 
     HAR_LOAD.on('end', function (har) {
 	//TODO, more robust way to find
@@ -108,7 +121,7 @@ HAR_LOAD = chc.load([WEBSITE_LIST[0], WEBSITE_LIST[1], WEBSITE_LIST[2], WEBSITE_
     });
 
     HAR_LOAD.on('error', function (err) {
-	console.error('Cannot connect to Chrome from ' +  i  +  ': ' + err);
+	console.error('Cannot connect to Chrome from: ' + err);
     });
 //}
 
