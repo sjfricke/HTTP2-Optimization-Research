@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sjfricke/HTTP2-Optimization-Research#readme",
   "dependencies": {
+    "async": "^2.1.5",
     "chrome-har-capturer": "^0.9.3",
     "minimist": "^1.2.0",
     "mysql": "^2.13.0",
