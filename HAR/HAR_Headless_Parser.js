@@ -16,8 +16,8 @@ const CONNECTION_PATH = 1; // connection path 0 == local, 1 == internet //TODO
 
 var DB_NAME, DB_HOST, DB_USER, DB_PASS; // used to log into database
 var INPUT_FILE; // where to grab the websites
-var PORT = 9222; // for chrome-har-captuer 
-var VERBOSE = false; // when you want your terminal spammed 
+var PORT = 9222; // for chrome-har-captuer
+var VERBOSE = false; // when you want your terminal spammed
 var DEBUG = false; // used for turning on debug output
 var WEBSITE_LIST; // array of websites to scan
 var PARSE_LOOP_COUNT = 0; // used to track recursive loop
@@ -37,7 +37,7 @@ if (argv.dbhost) {
     DB_HOST = argv.dbhost;
 } else {
     DB_HOST = readlineSync.question("Enter IP of database: (127.0.0.1) ");
-    if (DB_HOST == false) { DB_HOST = "127.0.0.1"; } //default
+    if (DB_HOST == false) { DB_HOST = "127.0.0.1"; } // default
 }
 
 // --dbport
@@ -45,7 +45,7 @@ if (argv.dbport) {
     DB_PORT = argv.dbport;
 } else {
     DB_PORT = readlineSync.question("Enter port of database: (3306) ");
-    if (DB_PORT == false) { DB_PORT = "3306"; } //default
+    if (DB_PORT == false) { DB_PORT = "3306"; } // default
 }
 
 // --dbuser
@@ -104,7 +104,7 @@ for (let i = 0; i < WEBSITE_LIST.length; ) {
 }
 
 // -p, --port
-if (argv.p || argv.port) { PORT = argv.port || argv.p; } 
+if (argv.p || argv.port) { PORT = argv.port || argv.p; }
 
 // -v, --verbose
 if (argv.v || argv.verbose) { VERBOSE = true; }
@@ -124,7 +124,7 @@ var connection = mysql.createConnection({
     password    : DB_PASS,
     database    : DB_NAME,
     port        : DB_PORT,
-    dateStrings : 'date' // needed to allow javascript dates, MySQL will be forced to cast it   
+    dateStrings : 'date' // needed to allow javascript dates, MySQL will be forced to cast it
 });
 if (DEBUG) { console.log("DB_HOST: ",DB_HOST,"\nDB_USER: ",DB_USER,"\nDB_PASS: ",DB_PASS,"\nDB_NAME: ",DB_NAME,"\nDB_PORT: ",DB_PORT,"\n");}
 
@@ -133,7 +133,7 @@ connection.connect( (err) => {
 	console.error('ERROR: connecting to database: ' + err.stack);
 	process.exit(1);
     }
-    
+
     if (VERBOSE) { console.log("Connected to database as threadId", connection.threadId, "\n"); }
 
     parse_loop();
@@ -150,7 +150,7 @@ function parse_loop() {
 	cleanup();
 	return;
     }
-   
+
     // loads site and waits for event
     HAR_LOAD = chc.load(WEBSITE_LIST[PARSE_LOOP_COUNT]);
 
@@ -178,7 +178,7 @@ function parse_loop() {
 
 	var domain = har.log.pages[0].title; // keep variable as we use is multiple times below
 	var WebsiteID; // gets called from website_query and used as foreign key for entry insert query
-	
+
 	/** WEBSITE QUERY **/
 	var website_query = connection.query('INSERT INTO ' + DB_NAME + '.Website SET ' +
 					     'Domain = ?, NumberOfFiles = ?, StartedDateTime = ?, OnContentLoad = ?, OnLoad = ?, ' +
@@ -204,20 +204,20 @@ function parse_loop() {
 		}
 
 		WebsiteId = results.insertId;
-		
+
 		// loops through each asynch call in a synch fashion
 		async.forEachSeries(har.log.entries,
 		    function(entry, callback) { // each entry table query
-			
+
 			// loops through all headers and will be null if not found as headers are optional
 			var header_req_cache_control = findHeader(entry.request.headers, "cache-control");
 			var header_req_date = findHeader(entry.request.headers, "date");
-			var header_req_user_agent = findHeader(entry.request.headers, "user-agent");			
+			var header_req_user_agent = findHeader(entry.request.headers, "user-agent");
 			var header_res_date = findHeader(entry.response.headers, "date");
 			var header_res_last_modified = findHeader(entry.response.headers, "last-modified");
 			var header_res_server = findHeader(entry.response.headers, "server");
 			var header_res_content_length = findHeader(entry.response.headers, "content-length");
-			
+
 			var entry_query = connection.query('INSERT INTO ' + DB_NAME + '.Entries SET WebsiteId = ?, ' +
 				         'Domain = ?, StartedDateTime = ?, TotalTime = ?, RequestCacheControl = ?, RequestDate = ?, RequestUserAgent = ?, '+
 					 'RequestUrl = ?, RequestHeadersSize = ?, RequestBodySize = ?, ResponseDate = ?, ResponseLastModified = ?, '+
@@ -225,7 +225,7 @@ function parse_loop() {
 				         'ResponseHttpVersion = ?, ResponseTransferSize = ?, Blocked = ?, DNS = ?, Connect = ?, Send = ?, Wait = ?, '+
 					 'Receive = ?, SSLTime = ?, ComputerType = ?, ConnectionPath = ?',
 					 [
-					     WebsiteId, // WebsiteId		       
+					     WebsiteId, // WebsiteId
 					     domain, // Domain
 					     new Date(entry.startedDateTime), // StartedDateTime
 					     entry.time, // TotalTime
@@ -254,7 +254,7 @@ function parse_loop() {
 					     entry.timings.wait, // Wait
 					     entry.timings.receive, // Receive
 					     entry.timings.ssl, // SSLTime
-					     
+
 					     COMPUTER_TYPE, // ComputerType
 					     CONNECTION_PATH // ConnectionPath
 					 ],
@@ -265,36 +265,36 @@ function parse_loop() {
 				    console.log("TODO: Catch query error");
 				    process.exit(1);
 				}
-				
+
 				if (VERBOSE) { console.log("Datbase insert for ", entry.request.url, "\n"); }
 
 				callback(); // used to call next async entry
 
 			}); // connection.query
-			
+
 			if (DEBUG) console.log(entry_query.sql, "\n");
-			
+
 		    }, function(error) { // called when all entries are done
 
- 			if (error) { 
+ 			if (error) {
 			    console.error("async series error: ", error);
 			    console.log("TODO: Catch async error");
 			    process.exit(1);
 			}
-			
+
 			console.log("Parse loop " + PARSE_LOOP_COUNT + " complete"); // only non-verbose printout
 			PARSE_LOOP_COUNT++;
 			parse_loop(); // recursion call
-				     
+
 	     }); // forEachOfSeries
-		
+
 	}); // website_query
-	
+
 	if (DEBUG) { console.log(website_query.sql, "\n") };
-	
+
     }); // HAR_LOAD.on(end)
 
-    
+
 } // parse_loop
 
 
