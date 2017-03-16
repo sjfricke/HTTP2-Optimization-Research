@@ -282,7 +282,7 @@ function parse_loop() {
 			    process.exit(1);
 			}
 			
-			if (VERBOSE) { console.log("Parse loop " + PARSE_LOOP_COUNT + " complete"); }
+			console.log("Parse loop " + PARSE_LOOP_COUNT + " complete"); // only non-verbose printout
 			PARSE_LOOP_COUNT++;
 			parse_loop(); // recursion call
 				     
