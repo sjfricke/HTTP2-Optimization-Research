@@ -1,5 +1,5 @@
 CREATE TABLE `har_db`.`Website` (
-  `WebsiteInstance` INT NOT NULL AUTO_INCREMENT,
+  `WebsiteID` INT NOT NULL AUTO_INCREMENT,
   `Domain` VARCHAR(100) NOT NULL,
   `NumberOfFiles` INT NOT NULL,
   `StartedDateTime` DATETIME NOT NULL,
@@ -9,5 +9,4 @@ CREATE TABLE `har_db`.`Website` (
   `Size` VARCHAR(8) NOT NULL,
   `Count` VARCHAR(8) NOT NULL,
   `Structure` VARCHAR(8) NOT NULL,
-  PRIMARY KEY (`WebsiteInstance`));
-
+  PRIMARY KEY (`WebsiteID`));
