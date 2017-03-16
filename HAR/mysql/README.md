@@ -8,7 +8,7 @@ To setup your own MySQL tables for the HAR parser
 3. Execute the `Entries.sql` query
 
 ## Website Table
-* `WebsiteID` - **[INT]** [NOT NULL] [AUTO_INCREMENT] *[PRIMARY KEY]*
+* `WebsiteID` **[INT]** [NOT NULL] [AUTO_INCREMENT] *[PRIMARY KEY]*
   * Used to track each call to a website as its own instance.
 * `Domain` **[VARCHAR(100)]** [NOT NULL]
   * The full domain path of the site.
@@ -125,7 +125,13 @@ To setup your own MySQL tables for the HAR parser
   * Use -1 if the timing does not apply to the current request.
 * `ComputerType` **[INT(11)]** [DEFAULT NULL]
   * Which computer was used to run HAR Parser
-	* Different among internal testing
+    * **NOTE:** Different among internal testing
+    * `0` - Desktop - Ubuntu
+    * `1` - Raspberry Pi 3 - Ubuntu
 * `ConnectionPath` **[INT(11)]** [DEFAULT NULL]
   * Which form of connection method was used
-	* Different among internal testing
+    * **NOTE:** Different among internal testing
+    * `0` - Ethernet over DNS
+    * `1` - Wi-Fi over DNS
+    * `2` - Ethernet over Local Network
+    * `3` - Wi-Fi over Local Network
