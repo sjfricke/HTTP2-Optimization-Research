@@ -128,11 +128,11 @@ var connection = mysql.createConnection({
 
 connection.connect( (err) => {
     if (err) {
-	console.error('error connecting to database: ' + err.stack);
+	console.error('ERROR: connecting to database: ' + err.stack);
 	process.exit(1);
     }
     
-    if (VERBOSE) { console.log('connected to database as threadId ' + connection.threadId); }
+    if (VERBOSE) { console.log('Connected to database as threadId ' + connection.threadId); }
 
     parse_loop();
 });
@@ -149,7 +149,7 @@ function parse_loop() {
 	return;
     }
 
-    // gets website obj data
+    // gets website obj data and parses it out for use in query insert
     var website_obj = har.log.entries[0].request.headers[0].value.replace(/[/]+/g, ''); // returns ex: W_1_2_a
     var obj_type = website_obj.split("_")[0];
     var	obj_size  = website_obj.split("_")[1];
@@ -171,50 +171,80 @@ function parse_loop() {
     // takes har and inserts it
     HAR_LOAD.on('end', (har) => {
 
+	var domain = har.log.pages[0].title; // keep variable as we use is multiple times below
+	var WebsiteID; // gets called from website_query and used as foreign key for entry insert query
+	
 	/** WEBSITE QUERY **/
-	var website_query = connection.query('INSERT INTO ' + DB_NAME + '.Website SET Domain = ?, NumberOfFiles = ?, FirstLoad = ?,' +
-			 ' OnContentLoad = ? , OnLoad = ?, ObjectType = ?, Size = ?, Count = ?, Structure = ?',
+	var website_query = connection.query('INSERT INTO ' + DB_NAME + '.Website SET ' +
+					     'Domain = ?, NumberOfFiles = ?, StartedDateTime = ?, OnContentLoad = ?, OnLoad = ?, ' +
+					     'ObjectType = ?, Size = ?, Count = ?, Structure = ?',
 			 [
-			     har.log.pages[0].title, // domain,
+			     domain, // domain,
 			     har.log.entries.length, // NumberOfFiles
-			     argv.firstLoad, //FirstLoad //TODO how to get determine First Load?
-			     har.log.pages[0].pageTimings.onContentLoad,// OnContentLoad data['log']['pages'][0]['pageTimings']['onContentLoad']
-			     har.log.pages[0].pageTimings.onLoad,// OnLoad
-			     obj_type,// ObjectType
-			     obj_size,// Size
-			     obj_count,// Count
-			     obj_structure// Structure
+			     har.log.pages[0].staredDateTime, // StartedDateTime
+			     har.log.pages[0].pageTimings.onContentLoad, // OnContentLoad
+			     har.log.pages[0].pageTimings.onLoad, // OnLoad
+			     obj_type, // ObjectType
+			     obj_size, // Size
+			     obj_count, // Count
+			     obj_structure // Structure
 
 			 ],
-	    (error, results, fields) => { // returns on insert
+	    (error, results, fields) => { // returns on website query insert
 
+		WebsiteId = results.insertId;
+		
 		// loops through each asynch call in a synch fashion
 		async.forEachOfSeries(har.log.entries,
 		    function(entry, callback) { // each entry table query
-
-			var entry_query = connection.query('INSERT INTO ' + DB_NAME + '.Entries SET Domain = ?, Url = ?, Blocked = ?, DNS = ?,' +
-					 ' Connected = ?, Send = ?, Wait = ?, Receive = ?, SSL_time = ?, ' +
-					 'RequestHeadersSize = ?, RequestBodySize = ?, ResponseHeadersSize = ?, ResponseBodySize = ?, ResponseStatus = ?,' +
-					 'ResponseTransferSize = ?, ContentType = ? ',
+			
+			// loops through all headers and will be null if not found as headers are optional
+			var header_req_cache_control = findHeader(entry.request, "cache-control");
+			var header_req_date = findHeader(entry.request, "date");
+			var header_req_user_agent = findHeader(entry.request, "user-agent");			
+			var header_res_date = findHeader(entry.response, "date");
+			var header_res_last_modified = findHeader(entry.response, "last-modified");
+			var header_res_server = findHeader(entry.response, "server");
+			var header_res_length = findHeader(entry.response, "length");
+			
+			var entry_query = connection.query('INSERT INTO ' + DB_NAME + '.Entries SET ' +
+				         'Domain = ?, StartedDateTime = ?, TotalTime = ?, RequestCacheControl = ?, RequestDate = ?, RequestUserAgent = ?, '+
+					 'RequestURL = ?, RequestHeadersSize = ?, RequestBodySize = ?, ResponseDate = ?, ResponseLastModified = ?, '+
+					 'ResponseServer = ?, ResponseLength = ?, ResponseStatus = ?, ResponseHeaderSize = ?, ResponseBodySize = ?, '+
+				         'ResponseHttpVersion = ?, ResponseTransferSize = ?, Blocked = ?, DNS = ?, Connect = ?, Send = ?, Wait = ?, '+
+					 'Receive = ?, SSLTime = ?, ComputerType = ?, ConnectionPath = ?',
 					 [
-					     har.log.pages[0].title ,// Domain
-					     entry.request.url, // Url
+					     domain, // Domain
+					     entry.startedDateTime, // StartedDateTime
+					     entry.time, // TotalTime
+
+					     header_req_cache_control, // RequestCacheControl
+					     header_req_date, // RequestDate
+					     header_req_user_agent, // RequestUserAgent
+					     entry.request.url, // RequestUrl
+					     entry.request.headersSize, // RequestHeaderSize
+					     entry.request.bodySize, // RequestBodySize
+
+					     header_res_date, // ResponseDate
+					     header_res_last_modified, // ResponseLastModified
+					     header_res_server, // ResponseServer
+					     header_res_length, // ResponseLength
+					     entry.response.status, // ResponseStatus
+					     entry.response.headersSize, // ResponseHeaderSize
+					     entry.response.bodySize, // ResponseBodySize
+					     entry.response.httpVersion //ResponseHttpVersion
+					     entry.response._transferSize, // ResponseTransferSize
+
 					     entry.timings.blocked, // Blocked
 					     entry.timings.dns, // DNS
 					     entry.timings.connect, // Connect
 					     entry.timings.send, // Send
 					     entry.timings.wait, // Wait
 					     entry.timings.receive, // Receive
-					     entry.timings.ssl, // SSL_time
-					     entry.request.headersSize, // RequestHeaderSize
-					     entry.request.bodySize, // RequestBodySize
-					     entry.response.headersSize, // ResponseHeaderSize
-					     entry.response.bodySize,// ResponseBodySize
-					     entry.response.status,// ResponseStatus
-					     entry.response._transferSize,// ResponseTransferSize
-					     entry.response.headers[5].value,// ContentType
-					     COMPUTER_TYPE, // computer type 0 == pi, 1 == desktop
-					     CONNECTION_PATH// connection path 0 == local, 1 == internet
+					     entry.timings.ssl, // SSLTime
+					     
+					     COMPUTER_TYPE, // ComputerType
+					     CONNECTION_PATH // ConnectionPath
 					 ], function(error, results) {
 					     // call with each query
 					     if (error) { console.error(error); }
@@ -244,6 +274,20 @@ function parse_loop() {
 
 
 function cleanup() { console.log("Cleanup TODO"); }
+
+/*
+ * custom array.find for headers, really just finds name key that matchs and the value in it
+ * header format: { name : "header_key", value : "header_value" }
+ */
+function findHeader(headers, name) {
+    for (let i = 0; i < headers.length; i++) {
+	if (headers[i].name == name) {
+	    return headers[i].value
+	}
+    }
+    return null; // null if not found for SQL database as undefinded is not SQL type
+}
+
 
 /*
 * Used to print out options supported
