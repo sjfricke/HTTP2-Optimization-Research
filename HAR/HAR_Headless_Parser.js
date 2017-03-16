@@ -119,12 +119,14 @@ Main Parsing and Database Inserting
 // Not using pooling due to tracking each insert over performance since no real time transactions needed
 // More setting can be added but ignored for the general case
 var connection = mysql.createConnection({
-    host     : DB_HOST,
-    user     : DB_USER,
-    password : DB_PASS,
-    database : DB_NAME,
-    port     : DB_PORT
+    host        : DB_HOST,
+    user        : DB_USER,
+    password    : DB_PASS,
+    database    : DB_NAME,
+    port        : DB_PORT,
+    dateStrings : 'date' // needed to allow javascript dates, MySQL will be forced to cast it   
 });
+if (DEBUG) { console.log("DB_HOST: ",DB_HOST,"\nDB_USER: ",DB_USER,"\nDB_PASS: ",DB_PASS,"\nDB_NAME: ",DB_NAME,"\nDB_PORT: ",DB_PORT,"\n");}
 
 connection.connect( (err) => {
     if (err) {
@@ -132,7 +134,7 @@ connection.connect( (err) => {
 	process.exit(1);
     }
     
-    if (VERBOSE) { console.log('Connected to database as threadId ' + connection.threadId); }
+    if (VERBOSE) { console.log("Connected to database as threadId", connection.threadId, "\n"); }
 
     parse_loop();
 });
@@ -148,28 +150,31 @@ function parse_loop() {
 	cleanup();
 	return;
     }
-
-    // gets website obj data and parses it out for use in query insert
-    var website_obj = har.log.entries[0].request.headers[0].value.replace(/[/]+/g, ''); // returns ex: W_1_2_a
-    var obj_type = website_obj.split("_")[0];
-    var	obj_size  = website_obj.split("_")[1];
-    var obj_count = website_obj.split("_")[2];
-    var obj_structure = website_obj.split("_")[3];
-    
+   
     // loads site and waits for event
     HAR_LOAD = chc.load(WEBSITE_LIST[PARSE_LOOP_COUNT]);
 
     HAR_LOAD.on('connect', function () {
-        if (VERBOSE) { console.log(WEBSITE_LIST[PARSE_LOOP_COUNT] + ' connected to Chrome'); }
+        if (VERBOSE) { console.log(WEBSITE_LIST[PARSE_LOOP_COUNT] + ' connected to Chrome\n'); }
     });
 
     // TODO, have it retry or something better then skip
     HAR_LOAD.on('error', (err) => {
 	console.error('Cannot connect to Chrome for' + WEBSITE_LIST[PARSE_LOOP_COUNT] + ' due to : ' + err);
+	console.error("TODO: Catch HAR_LOAD error");
+	process.exit(1);
     });
 
     // takes har and inserts it
     HAR_LOAD.on('end', (har) => {
+
+
+	// gets website obj data and parses it out for use in query insert
+	var website_obj = har.log.entries[0].request.headers[0].value.replace(/[/]+/g, ''); // returns ex: W_1_2_a
+	var obj_type = website_obj.split("_")[0];
+	var obj_size  = website_obj.split("_")[1];
+	var obj_count = website_obj.split("_")[2];
+	var obj_structure = website_obj.split("_")[3];
 
 	var domain = har.log.pages[0].title; // keep variable as we use is multiple times below
 	var WebsiteID; // gets called from website_query and used as foreign key for entry insert query
@@ -181,7 +186,7 @@ function parse_loop() {
 			 [
 			     domain, // domain,
 			     har.log.entries.length, // NumberOfFiles
-			     har.log.pages[0].staredDateTime, // StartedDateTime
+			     new Date(har.log.pages[0].startedDateTime), // StartedDateTime
 			     har.log.pages[0].pageTimings.onContentLoad, // OnContentLoad
 			     har.log.pages[0].pageTimings.onLoad, // OnLoad
 			     obj_type, // ObjectType
@@ -192,47 +197,54 @@ function parse_loop() {
 			 ],
 	    (error, results, fields) => { // returns on website query insert
 
+		if (error) {
+		    console.error("website_query error: ", error);
+		    console.log("TODO: Catch query error");
+		    process.exit(1);
+		}
+
 		WebsiteId = results.insertId;
 		
 		// loops through each asynch call in a synch fashion
-		async.forEachOfSeries(har.log.entries,
+		async.forEachSeries(har.log.entries,
 		    function(entry, callback) { // each entry table query
 			
 			// loops through all headers and will be null if not found as headers are optional
-			var header_req_cache_control = findHeader(entry.request, "cache-control");
-			var header_req_date = findHeader(entry.request, "date");
-			var header_req_user_agent = findHeader(entry.request, "user-agent");			
-			var header_res_date = findHeader(entry.response, "date");
-			var header_res_last_modified = findHeader(entry.response, "last-modified");
-			var header_res_server = findHeader(entry.response, "server");
-			var header_res_length = findHeader(entry.response, "length");
+			var header_req_cache_control = findHeader(entry.request.headers, "cache-control");
+			var header_req_date = findHeader(entry.request.headers, "date");
+			var header_req_user_agent = findHeader(entry.request.headers, "user-agent");			
+			var header_res_date = findHeader(entry.response.headers, "date");
+			var header_res_last_modified = findHeader(entry.response.headers, "last-modified");
+			var header_res_server = findHeader(entry.response.headers, "server");
+			var header_res_content_length = findHeader(entry.response.headers, "content-length");
 			
-			var entry_query = connection.query('INSERT INTO ' + DB_NAME + '.Entries SET ' +
+			var entry_query = connection.query('INSERT INTO ' + DB_NAME + '.Entries SET WebsiteId = ?, ' +
 				         'Domain = ?, StartedDateTime = ?, TotalTime = ?, RequestCacheControl = ?, RequestDate = ?, RequestUserAgent = ?, '+
-					 'RequestURL = ?, RequestHeadersSize = ?, RequestBodySize = ?, ResponseDate = ?, ResponseLastModified = ?, '+
-					 'ResponseServer = ?, ResponseLength = ?, ResponseStatus = ?, ResponseHeaderSize = ?, ResponseBodySize = ?, '+
+					 'RequestUrl = ?, RequestHeadersSize = ?, RequestBodySize = ?, ResponseDate = ?, ResponseLastModified = ?, '+
+					 'ResponseServer = ?, ResponseContentLength = ?, ResponseStatus = ?, ResponseHeadersSize = ?, ResponseBodySize = ?, '+
 				         'ResponseHttpVersion = ?, ResponseTransferSize = ?, Blocked = ?, DNS = ?, Connect = ?, Send = ?, Wait = ?, '+
 					 'Receive = ?, SSLTime = ?, ComputerType = ?, ConnectionPath = ?',
 					 [
+					     WebsiteId, // WebsiteId		       
 					     domain, // Domain
-					     entry.startedDateTime, // StartedDateTime
+					     new Date(entry.startedDateTime), // StartedDateTime
 					     entry.time, // TotalTime
 
 					     header_req_cache_control, // RequestCacheControl
-					     header_req_date, // RequestDate
+					     new Date(header_req_date), // RequestDate
 					     header_req_user_agent, // RequestUserAgent
 					     entry.request.url, // RequestUrl
-					     entry.request.headersSize, // RequestHeaderSize
+					     entry.request.headersSize, // RequestHeadersSize
 					     entry.request.bodySize, // RequestBodySize
 
-					     header_res_date, // ResponseDate
-					     header_res_last_modified, // ResponseLastModified
+					     new Date(header_res_date), // ResponseDate
+					     new Date(header_res_last_modified), // ResponseLastModified
 					     header_res_server, // ResponseServer
-					     header_res_length, // ResponseLength
+					     header_res_content_length, // ResponseContentLength
 					     entry.response.status, // ResponseStatus
-					     entry.response.headersSize, // ResponseHeaderSize
+					     entry.response.headersSize, // ResponseHeadersSize
 					     entry.response.bodySize, // ResponseBodySize
-					     entry.response.httpVersion //ResponseHttpVersion
+					     entry.response.httpVersion, //ResponseHttpVersion
 					     entry.response._transferSize, // ResponseTransferSize
 
 					     entry.timings.blocked, // Blocked
@@ -245,27 +257,40 @@ function parse_loop() {
 					     
 					     COMPUTER_TYPE, // ComputerType
 					     CONNECTION_PATH // ConnectionPath
-					 ], function(error, results) {
-					     // call with each query
-					     if (error) { console.error(error); }
-					     if (VERBOSE) { console.log("Datbase insert for " + entry.request.url); }
-					     
-					 }); //connection.query
+					 ],
+			    function(error, results) {
+				// call with each query
+				if (error) {
+				    console.error("entry_query error: ", error);
+				    console.log("TODO: Catch query error");
+				    process.exit(1);
+				}
+				
+				if (VERBOSE) { console.log("Datbase insert for ", entry.request.url, "\n"); }
+
+				callback(); // used to call next async entry
+
+			}); // connection.query
 			
-			if (VERBOSE) console.log(entry_query.sql);
+			if (DEBUG) console.log(entry_query.sql, "\n");
 			
 		    }, function(error) { // called when all entries are done
 
- 			if (error) { console.error(error); }
-			if (VERBOSE) { console.log("Parse loop " + PARSE_LOOP_COUNT + " complete");
+ 			if (error) { 
+			    console.error("async series error: ", error);
+			    console.log("TODO: Catch async error");
+			    process.exit(1);
+			}
+			
+			if (VERBOSE) { console.log("Parse loop " + PARSE_LOOP_COUNT + " complete"); }
 			PARSE_LOOP_COUNT++;
 			parse_loop(); // recursion call
-			
+				     
 	     }); // forEachOfSeries
 		
 	}); // website_query
 	
-	if (VERBOSE) { console.log(website_query.sql) };
+	if (DEBUG) { console.log(website_query.sql, "\n") };
 	
     }); // HAR_LOAD.on(end)
 
@@ -273,7 +298,10 @@ function parse_loop() {
 } // parse_loop
 
 
-function cleanup() { console.log("Cleanup TODO"); }
+function cleanup() {
+    connection.end(); // close SQL connection for good practice
+    process.exit(1); // remove only if need to continue after cleanup
+}
 
 /*
  * custom array.find for headers, really just finds name key that matchs and the value in it
