@@ -11,7 +11,7 @@ const async = require('async');
 /********************************************
 Globals
 ********************************************/
-const COMPUTER_TYPE = 0; // computer type 0 == pi, 1 == desktop //TODO
+const COMPUTER_TYPE = 0; // computer type 0 == desktop, 1 == pi //TODO
 const CONNECTION_PATH = 1; // connection path 0 == local, 1 == internet //TODO
 
 var DB_NAME, DB_HOST, DB_USER, DB_PASS; // used to log into database
