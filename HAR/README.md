@@ -61,7 +61,7 @@ Options:
   * Check to make sure the screen is present and is working
     * `xset q`
 * Now we can run chrome in headless debug mode
-  * `chromium-browser --remote-debugging-port=9222 --enable-benchmarking --enable-net-benchmarking &`
+  * `chromium-browser --remote-debugging-port=9222 --enable-benchmarking --enable-net-benchmarking --incognito &`
   * To make sure the chrome headless is up and running run
 	* `curl http://localhost:9222/json`
 * Now we run our script
