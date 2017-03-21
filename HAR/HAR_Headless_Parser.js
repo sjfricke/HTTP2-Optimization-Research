@@ -11,7 +11,7 @@ const async = require('async');
 /********************************************
 Globals
 ********************************************/
-const COMPUTER_TYPE = 0; // computer type 0 == desktop, 1 == pi //TODO
+const COMPUTER_TYPE = 1; // computer type 0 == desktop, 1 == pi //TODO
 const CONNECTION_PATH = 1; // connection path 0 == local, 1 == internet //TODO
 
 var DB_NAME, DB_HOST, DB_USER, DB_PASS; // used to log into database
@@ -282,7 +282,7 @@ function parse_loop() {
 			    process.exit(1);
 			}
 
-			console.log("Parse loop " + PARSE_LOOP_COUNT + " complete"); // only non-verbose printout
+			console.log("Parse loop ", PARSE_LOOP_COUNT, "of ", WEBSITE_LIST.length-1, " complete"); // only non-verbose printout
 			PARSE_LOOP_COUNT++;
 			parse_loop(); // recursion call
 
