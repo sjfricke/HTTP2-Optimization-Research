@@ -110,9 +110,9 @@ connection.connect( (err) => {
  */
 async function main_loop() {
     try {
-	const query1 = await test_query_1();
+	const query1 = await require("./queries/test_query_1.js")(connection);
 	console.log("RUN 2");
-	const query2 = await test_query_2();
+	const query2 = await require("./queries/test_query_2.js")(connection);
 	console.log("RUN 4");
 	console.log(query1);
 	console.log("------------");
@@ -120,38 +120,6 @@ async function main_loop() {
     } catch (error) {
 	console.error(error);
     }
-}
-
-function test_query_1() {
-
-    return new Promise(function(resolve, reject) {
-	connection.query("SELECT Count, Structure FROM Website WHERE WebsiteID = 282;", (error, results, fields) => {
-	    console.log("RUN 1");
-	    if (error) {
-		console.error(error);
-		return reject(false);
-	    }       
-
-	    return resolve(results);
-	});
-    })
-}
-
-function test_query_2() {
-
-    return new Promise(function(resolve, reject) {
-	connection.query("SELECT ObjectType, Size FROM Website WHERE WebsiteID = 282;", (error, results, fields) => {
-
-	    console.log("RUN 3");
-	    if (error) {
-		console.error(error);
-		return reject(false);
-	    }       
-
-	    return resolve(results);
-	});
-
-    })
 }
 
 function cleanup() {
