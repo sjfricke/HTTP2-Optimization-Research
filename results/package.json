@@ -1,0 +1,25 @@
+{
+  "name": "generate-results",
+  "version": "1.0.0",
+  "description": "This tool is used to automatically use data from database and create charts from.",
+  "main": "Genearte_Results.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjfricke/HTTP2-Optimization-Research.git"
+  },
+  "author": "Spencer Fricke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sjfricke/HTTP2-Optimization-Research/issues"
+  },
+  "homepage": "https://github.com/sjfricke/HTTP2-Optimization-Research#readme",
+  "dependencies": {
+    "async": "^2.1.5",
+    "minimist": "^1.2.0",
+    "mysql": "^2.13.0",
+    "readline-sync": "^1.4.6"
+  }
+}
