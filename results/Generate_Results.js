@@ -5,7 +5,7 @@ const fs = require('fs'); // file system
 const argv = require('minimist')(process.argv.slice(2)); // used for easy param parsing
 const readlineSync = require('readline-sync'); // reads input synchonously
 const mysql = require('mysql'); // offical mysql library
-const async = require('async');
+const Promise = require("bluebird");
 
 /********************************************
 Globals
@@ -108,14 +108,50 @@ connection.connect( (err) => {
  * 2. Parses/cleans/format data
  * 3. Generates chart data
  */
-function main_loop() {
-    connection.query("SELECT ObjectType, Size, Count, Structure FROM Website WHERE WebsiteID = 282 OR WebsiteID = 400;", (error, results, fields) => {
-	if (error) { console.error(error) }
+async function main_loop() {
+    try {
+	const query1 = await test_query_1();
+	console.log("RUN 2");
+	const query2 = await test_query_2();
+	console.log("RUN 4");
+	console.log(query1);
+	console.log("------------");
+	console.log(query2);
+    } catch (error) {
+	console.error(error);
+    }
+}
 
-	console.dir(results);
-	console.log("------------------");
-	console.dir(fields);
-    });
+function test_query_1() {
+
+    return new Promise(function(resolve, reject) {
+	connection.query("SELECT Count, Structure FROM Website WHERE WebsiteID = 282;", (error, results, fields) => {
+	    console.log("RUN 1");
+	    if (error) {
+		console.error(error);
+		return reject(false);
+	    }       
+
+	    return resolve(results);
+	});
+    })
+}
+
+function test_query_2() {
+
+    return new Promise(function(resolve, reject) {
+	connection.query("SELECT ObjectType, Size FROM Website WHERE WebsiteID = 282;", (error, results, fields) => {
+
+	    console.log("RUN 3");
+	    if (error) {
+		console.error(error);
+		return reject(false);
+	    }       
+
+	    return resolve(results);
+	});
+
+    })
 }
 
 function cleanup() {

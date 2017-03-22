@@ -18,6 +18,7 @@
   "homepage": "https://github.com/sjfricke/HTTP2-Optimization-Research#readme",
   "dependencies": {
     "async": "^2.1.5",
+    "bluebird": "^3.5.0",
     "minimist": "^1.2.0",
     "mysql": "^2.13.0",
     "readline-sync": "^1.4.6"
