@@ -14,7 +14,7 @@ for (let i = 0; i < SIZE.length; i++) {
 }
 
 // Main Function
-module.exports = (connection, size) => {
+module.exports = (connection, verbose) => {
     return new Promise(function(resolve, reject) {
 	connection.query(
 	    `SELECT Website.WebsiteID, Size, Count, Structure, 
@@ -29,7 +29,7 @@ module.exports = (connection, size) => {
 		    return reject(false);
 		}
 
-		console.log("Query Successful");
+		if (verbose) { console.log("Query Successful"); }
 		
 		// Data needs to be sorted by both 'Size' and 'Count'
 		// Need Ave.Send, Ave.Wait, and Ave.Receive for tooltips
@@ -54,7 +54,7 @@ module.exports = (connection, size) => {
 		    data.push(inner_array);
 		}
 
-		console.log("Data double array created");
+		if (verbose) { console.log("Data double array created"); }
 		
 		// take queried data and add it to data
 		for (var i = 0; i < results.length; i++) {
@@ -68,7 +68,7 @@ module.exports = (connection, size) => {
 		    data[count][size].Receive += results[i]['AVG(Receive)'];
 		}		
 
-		console.log("Query results sorted out");
+		if (verbose) { console.log("Query results sorted out"); }
 		
 		// Need to no calculate data as its formated to Google Chart Row format
 		
@@ -100,12 +100,12 @@ module.exports = (connection, size) => {
 		    chart_row_data.push(row_data);
 		}
 
-		console.log("Chart Row data done");
+		if (verbose) { console.log("Chart Row data done"); }
 		
 		HTML += "data.addRows(" + JSON.stringify(chart_row_data) + ");";
 
 		// TODO give more colors choices
-		HTML += "var options = {title:'Load time over different number of files of same size',hAxis:{title:'Files in Page'},vAxis:{title:'Time (milliseconds)'},colors:['red','green','blue','purple','orange','black'],height: 1000,pointSize: 5};var chart = new google.visualization.LineChart(document.getElementById('chart_div'));chart.draw(data, options);}google.charts.load('current', {packages: ['corechart', 'line']});google.charts.setOnLoadCallback(drawChart);</script>";
+		HTML += "var options = {title:'Load time over different number of files of same size',hAxis:{title:'Files in Page'},vAxis:{title:'Time (milliseconds)'},colors:['red','green','blue','purple','orange','black'],height: 800,pointSize: 5};var chart = new google.visualization.LineChart(document.getElementById('chart_div'));chart.draw(data, options);}google.charts.load('current', {packages: ['corechart', 'line']});google.charts.setOnLoadCallback(drawChart);</script>";
 
 		// TODO check if directory exists and different relavent path
 		fs.writeFileSync('./charts/num_files_by_same_size.html', HTML);

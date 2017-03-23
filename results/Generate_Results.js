@@ -111,8 +111,8 @@ connection.connect( (err) => {
 var query_result;
 async function main_loop() {
     try {
-	query_result = await require("./queries/num_files_by_same_size.js")(connection);
-	console.log(query_result);
+	query_result = await require("./queries/num_files_by_same_size.js")(connection, VERBOSE);
+	console.log("num_files_by_same_size: " + query_result);
 //	query_result = await require("./queries/num_files_by_same_size.js")(connection, 1);
 
     } catch (error) {
