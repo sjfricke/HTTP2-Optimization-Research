@@ -108,18 +108,18 @@ connection.connect( (err) => {
  * 2. Parses/cleans/format data
  * 3. Generates chart data
  */
+var query_result;
 async function main_loop() {
     try {
-	const query1 = await require("./queries/test_query_1.js")(connection);
-	console.log("RUN 2");
-	const query2 = await require("./queries/test_query_2.js")(connection);
-	console.log("RUN 4");
-	console.log(query1);
-	console.log("------------");
-	console.log(query2);
+	query_result = await require("./queries/num_files_by_same_size.js")(connection);
+	console.log(query_result);
+//	query_result = await require("./queries/num_files_by_same_size.js")(connection, 1);
+
     } catch (error) {
 	console.error(error);
     }
+
+    cleanup();
 }
 
 function cleanup() {
