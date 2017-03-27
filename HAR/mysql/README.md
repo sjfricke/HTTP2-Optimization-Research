@@ -33,21 +33,42 @@ To setup your own MySQL tables for the HAR parser
 * `Size` **[VARCHAR(8)]** [NOT NULL]
   * Number of bytes of each page
 	* `0` - 100000 bytes *(~100 KB)*
-	* `1` - 500000 bytes *(~500 KB)*
-	* `2` - 1000000 bytes *(~1 MB)*
-	* `3` - 2000000 bytes *(~2 MB)*
-	* `4` - 4000000 bytes *(~4 MB)*
-	* `5` - 8000000 bytes *(~8 MB)*
-	* `6` - 100000000 bytes *(~100 MB)*
+	* `1` - 200000 bytes *(~200 KB)*
+	* `2` - 300000 bytes *(~300 KB)*
+	* `3` - 500000 bytes *(~500 KB)*
+	* `4` - 750000 bytes *(~750 KB)*
+	* `5` - 1000000 bytes *(~1 MB)*
+	* `6` - 1500000 bytes *(~1.5 MB)*
+	* `7` - 2000000 bytes *(~2 MB)*
+	* `8` - 2500000 bytes *(~2.5 MB)*
+	* `9` - 4000000 bytes *(~4 MB)*
+	* `10` - 6000000 bytes *(~6 MB)*
+	* `11` - 8000000 bytes *(~8 MB)*
 * `Count` **[VARCHAR(8)]** [NOT NULL]
   * The total number of object files that make up the `Size`.
-	* `0` - 3 files
-	* `1` - 10 files
-	* `2` - 50 files
-	* `3` - 100 files
-	* `4` - 200 files
-	* `5` - 500 files
-	* `6` - 1000 files
+	* `0` - 1 file
+	* `1` - 2 files
+	* `2` - 3 files
+	* `3` - 4 files
+	* `4` - 5 files
+	* `5` - 6 files
+	* `6` - 7 files
+	* `7` - 8 files
+	* `8` - 9 files
+	* `9` - 10 files
+	* `10` - 15 files
+	* `11` - 20 files
+	* `12` - 25 files
+	* `13` - 30 files
+	* `14` - 35 files
+	* `15` - 50 files
+	* `16` - 70 files
+	* `17` - 90 files
+	* `18` - 100 files
+	* `19` - 125 files
+	* `20` - 150 files
+	* `21` - 175 files
+	* `22` - 200 files	
 * `Structure` **[VARCHAR(8)]** [NOT NULL]
   * How the `Count` number of files are divided among the total page `Size`.
 	* `a` - Same Size
@@ -55,7 +76,7 @@ To setup your own MySQL tables for the HAR parser
 	* `b` - Ascending Order
 	* `c` - Descending Order
 	* `d` - Random
-
+	
 ## Entries Table
 * `EntryID` **[INT(11)]** [NOT NULL] [AUTO_INCREMENT] *[PRIMARY KEY]*
   * Gives each Entry a unique ID.
