@@ -2,12 +2,12 @@
 
 ### Naming Convention
 # (WXYZ)_(0-6)_(0-6)_(abcd)
-#   |     ||    |||   |||| 
-# OBJECT  ||    |||   ||||    
+#   |     ||    |||   ||||
+# OBJECT  ||    |||   ||||
 # TYPE    ||    |||   ||||
 #        SIZE   |||   ||||
 #              COUNT  ||||
-#                   STRUCTURE  
+#                   STRUCTURE
 
 ### OBJECT TYPE
 JS="W"

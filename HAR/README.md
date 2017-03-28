@@ -27,6 +27,7 @@ Options:
 * You will need to make sure you have a MySQL database to send the data too
   * **NOTE:** the machine running this parser doesn't need to have the database
   * We may add support for more DB options in future
+  * We are also assuming you can manage getting a MySQL Database up to use
 * First you will need python as the parsing tool is ran in python
 * You will need the [HAR_parser.py](./HAR_parser/HAR_parser.py) script in this directory or in the [HAR Parser subfolder](./HAR_parser)
 * You will need [Node.js](https://nodejs.org/en/) which is used to run the main script
@@ -60,7 +61,9 @@ Options:
   * Check to make sure the screen is present and is working
     * `xset q`
 * Now we can run chrome in headless debug mode
-  * `chromium-browser --remote-debugging-port=9222 --enable-benchmarking --enable-net-benchmarking &`
+  * `chromium-browser --remote-debugging-port=9222 --enable-benchmarking --enable-net-benchmarking --incognito &`
+  * To make sure the chrome headless is up and running run
+	* `curl http://localhost:9222/json`
 * Now we run our script
   * `node HAR_Headless_Parser.js`
  

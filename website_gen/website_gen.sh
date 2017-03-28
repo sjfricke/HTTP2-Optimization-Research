@@ -34,7 +34,7 @@ print_help() {
 
 	\e[31m#WebsiteName - Custom name of website used by script script \e[0m
 
-	###Note 
+	###Note
 	#Sizes of the objects will be as following:
 	All Max size = (TotalWebsiteSize / NumberOfObjects)
 	Asc/Desc = (TotalWebsiteSize/(NumberofObjects^2 + NumberofObjects)) * n where n = 1 to = NumberofObjects
@@ -92,7 +92,7 @@ WEB_NAME=$7
 
 ### directory gen
 if [ -a $COUNT_FP ]
-	then 
+	then
 		WEB_NUM="$(cat $COUNT_FP)"
 		let "WEB_NUM++"
 		echo $WEB_NUM > $COUNT_FP
@@ -104,8 +104,8 @@ fi
 WEB_FP=$MAIN_WEB_FP"html/"$WEB_NAME
 
 mkdir $WEB_FP
-INDEX_FP=$WEB_FP"/index.html" 
-OBJECT_FP=$WEB_FP"/object" 
+INDEX_FP=$WEB_FP"/index.html"
+OBJECT_FP=$WEB_FP"/object"
 
 ### web list addition
 echo "https://http2optimization.com/"$WEB_NAME"/" >> $WEB_LIST_FP
@@ -154,11 +154,11 @@ do
 			FT=".png"
 		;;
 		esac
-	;;	
+	;;
 	esac
 	case "$OBJ_STRUCT" in
 	0)#All Max size
-		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) >& /dev/null	
+		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( (WEB_MAX_SIZE/OBJ_COUNT)/BS )) >& /dev/null
 	;;
 	1)#Ascending order
 		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*i) /BS )) >& /dev/null
@@ -171,7 +171,7 @@ do
 		while [ $(( LIST[RAND] )) == 1 ]; do
 			if (( RAND >= OBJ_COUNT ));
 			then
-				RAND=1		
+				RAND=1
 			else
 				RAND=$(( RAND + 1 ))
 			fi
@@ -179,7 +179,7 @@ do
 		LIST[$RAND]=1
 		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*RAND) /BS )) >& /dev/null
 	;;
-	esac	
+	esac
 done
 
 ### html gen end
