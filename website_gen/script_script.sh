@@ -16,22 +16,12 @@ IMG="Y"
 RND="Z"
 
 ### SIZES
-S0=100000
-S1=500000
-S2=1000000
-S3=2000000
-S4=4000000
-S5=8000000
-S6=100000000
+unset SIZES
+SIZES=(100000 250000 500000 750000 1000000 1500000 2000000 2500000 4000000 6000000 8000000)
 
 ### OBJECT COUNTS
-C0=3
-C1=10
-C2=50
-C3=100
-C4=200
-C5=500
-C6=1000
+unset OBJECTS
+OBJECTS=(1 2 3 4 5 6 7 8 9 10 15 20 25 30 35 50 70 90 100 125 150 175 200)
 
 ### OBJECT STRUCTURE
 SS="a" #All same size
@@ -71,65 +61,22 @@ do
                 WEBS0=$RND
         ;;
         esac
-        for j in `seq 0 6`; #SIZE
+        for j in ${!SIZES[@]}; #SIZE
         do
 		WEBS1=$j
-                case "$j" in
-                0)
-			SIZE=$S0
-			BS=1
-                ;;
-		1)
-			SIZE=$S1
-			BS=1
-                ;;
-                2)
-			SIZE=$S2
-			BS=1
-                ;;
-		3)
-			SIZE=$S3
+		SIZE=${SIZES[$j]}
+		
+		if [[ "$SIZE" -gt "999999" ]]
+		then
 			BS=100
-                ;;
-                4)
-			SIZE=$S4
-			BS=100
-                ;;
-		5)
-			SIZE=$S5
-			BS=100
-                ;;
-		6)
-			SIZE=$S6
-			BS=1000
-                ;;
-                esac
-                for k in `seq 0 6`; #COUNT
+		else
+			BS=1
+		fi
+
+                for k in ${!OBJECTS[@]}; #OBJECT COUNT
                 do
 			WEBS2=$k
-                        case "$k" in
-			0)
-				COUNT=$C0
-			;;
-			1)
-				COUNT=$C1
-			;;
-			2)
-				COUNT=$C2
-			;;
-			3)
-				COUNT=$C3
-			;;
-			4)
-				COUNT=$C4
-			;;
-			5)
-				COUNT=$C5
-			;;
-			6)
-				COUNT=$C6
-			;;
-                        esac
+			COUNT=${OBJECTS[$k]}
                         for l in `seq 0 3`; #OBJECT STRUCTURE
                         do
 				case "$l" in
@@ -153,8 +100,45 @@ do
 
 				### ACTUAL GENERATION
 				./website_gen.sh $COUNT $OBJECT_STRUCTURE $OBJECT_TYPE 0 $SIZE $BS $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3
+				#echo $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3"_"$COUNT"_"$SIZE
+				
                         done
                 done
         done
 done
+echo -n "const SIZE = ["
+for i in ${SIZES[@]};
+do
+
+	if [[ "$i" -lt "999999" ]]
+	then
+		BASE=1000
+		UNITS="KB"
+	else
+		BASE=1000000
+		UNITS="MB"
+	fi
+	
+	#SPENCER REGEX HERE
+	VALUE=$(python -c "print float($i) / float($BASE)")
+
+	if [ "$i" != "${SIZES[-1]}" ]
+	then
+		echo -n '"'$VALUE $UNITS'"'," "
+	else
+		echo '"'$VALUE $UNITS'"'"];"
+	fi
+done
+
+echo -n "const COUNT = ["
+for i in ${OBJECTS[@]};
+do
+	if [ "$i" != "${OBJECTS[-1]}" ]
+	then
+		echo -n '"'$i'"'," "
+	else
+		echo '"'$i'"'"];"
+	fi
+done
+
 
