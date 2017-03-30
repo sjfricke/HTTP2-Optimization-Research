@@ -1,0 +1,29 @@
+<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script> <div id='chart_div'></div><img src="http://static.tumblr.com/zsvxup4/NgOm4sea0/it_s_something.png" ><script>google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawTrendlines);
+
+function drawTrendlines() {
+      var data = new google.visualization.DataTable();
+
+  data.addColumn('number', 'Website Size');data.addColumn('number', 'Desktop');data.addColumn('number', 'Rpi');data.addRows([[100000,1180.5860107421875,7546.572509765625],[500000,1221.9057983398438,8197.450073242188],[1000000,1314.4460205078126,8544.76220703125],[2000000,1528.4080078125,8822.212646484375],[4000000,2289.523974609375,9092.93994140625],[8000000,4297.972021484375,10210.43505859375]]);var options = {
+        hAxis: {
+          title: 'Sizes(in Bytes)'
+        },
+        vAxis: {
+          title: 'OnLoad Time ms'
+        },
+        series: {
+          1: {curveType: 'function'}
+        },
+        pointSize: 3,
+        height: 1024,
+        width:1024,
+        colors: ['#AB0D06', '#007329'],
+        trendlines: {
+          0: {type: 'linear', color: '#333', opacity: 1},
+          1: {type: 'linear', color: '#111', opacity: .3}
+        }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }</script>
