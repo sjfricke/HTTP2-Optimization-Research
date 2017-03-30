@@ -108,7 +108,7 @@ module.exports = (connection, verbose) => {
             //Bottom of HTML
             HTML += `var options = {
         hAxis: {
-          title: 'Sizes(in Bytes)'
+          title: 'Sizes(in MB)'
         },
         vAxis: {
           title: 'OnLoad Time ms'
@@ -148,25 +148,25 @@ module.exports = (connection, verbose) => {
     var size;
     switch(number) {
         case 0:
-            size = 100000;
+            size = 0.1;
             break;
         case 1:
-            size = 500000;
+            size = .5;
             break;
         case 2:
-            size = 1000000;
+            size = 1;
             break;
         case 3:
-            size = 2000000;
+            size = 2;
             break;
         case 4:
-            size = 4000000;
+            size = 4;
             break;
         case 5:
-            size = 8000000;
+            size = 8;
             break;
         case 6:
-            size = 100000000;
+            size = 100;
             break;
         default:
             size = 0;
