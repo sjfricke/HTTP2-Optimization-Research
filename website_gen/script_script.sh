@@ -123,8 +123,7 @@ do
 		UNITS="MB"
 	fi
 	
-	#SPENCER REGEX HERE
-	VALUE=$(python -c "print float($i) / float($BASE)")
+	VALUE=$(python -c "print float($i) / float($BASE)" | sed -e 's/\.0//g')
 
 	if [ "$i" != "${SIZES[-1]}" ]
 	then
