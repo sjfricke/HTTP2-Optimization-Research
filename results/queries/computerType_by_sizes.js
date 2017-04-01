@@ -1,6 +1,7 @@
 // Can change different Size and Count intervals here
-const SIZE = ["100 KB", "500 KB", "1 MB", "2 MB", "4 MB", "8 MB"]; // size of site
-const COUNT = ["3", "10", "50", "100", "200", "500", "1000"]; // number of files
+const SIZE = ["100 KB", "250 KB", "500 KB", "750 KB", "1 MB", "1.5 MB", "2 MB", "2.5 MB", "4 MB", "6 MB", "8 MB"];
+const COUNT = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "15", "20", "25", "30", "35", "50", "70", "90", "100", "125", "150", "175", "200"];
+
 const ComputerType = ['Desktop' , 'Rpi'];
 const count = 6; //TODO SEE COUNT array for number of files
 
