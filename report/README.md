@@ -1,1 +1,1 @@
-To see full report go to our [main site](http://http2optimization.com/)
+To see full report go to our [main site](https://http2optimization.com/)
