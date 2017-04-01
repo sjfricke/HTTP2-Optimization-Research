@@ -1,13 +1,13 @@
 #! /bin/bash
 
 ### Naming Convention
-# (WXYZ)_(0-6)_(0-6)_(abcd)
-#   |     ||    |||   ||||
-# OBJECT  ||    |||   ||||
-# TYPE    ||    |||   ||||
-#        SIZE   |||   ||||
-#              COUNT  ||||
-#                   STRUCTURE
+# (WXYZ)_(  )_(  )_(abcd)
+#   |     ||   ||   ||||
+# OBJECT  ||   ||   ||||
+# TYPE    ||   ||   ||||
+#        SIZE  ||   ||||
+#             COUNT ||||
+#                 STRUCTURE
 
 ### OBJECT TYPE
 JS="W"
@@ -15,7 +15,7 @@ CSS="X"
 IMG="Y"
 RND="Z"
 
-### SIZES
+### SIZES (in bytes)
 unset SIZES
 SIZES=(100000 250000 500000 750000 1000000 1500000 2000000 2500000 4000000 6000000 8000000)
 
@@ -25,9 +25,9 @@ OBJECTS=(1 2 3 4 5 6 7 8 9 10 15 20 25 30 35 50 70 90 100 125 150 175 200)
 
 ### OBJECT STRUCTURE
 SS="a" #All same size
-ASC="b"
-DESC="c"
-RNDS="d" #random structure
+ASC="b" #Ascending
+DESC="c" #Descending
+RNDS="d" #Random structure
 
 ### LOOP VARIBLES
 OBJECT_STRUCTURE=0
@@ -102,10 +102,14 @@ do
 				./website_gen.sh $COUNT $OBJECT_STRUCTURE $OBJECT_TYPE 0 $SIZE $BS $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3
 				#echo $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3"_"$COUNT"_"$SIZE
 				
-                        done
-                done
-        done
-done
+                        done # /OBJECT STRUCTURE
+                done # /COUNT
+        done # /SIZE
+done # /TYPE
+
+#
+# Used print out size of result constants
+#
 echo -n "const SIZE = ["
 for i in ${SIZES[@]};
 do
