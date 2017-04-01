@@ -33,17 +33,16 @@ To setup your own MySQL tables for the HAR parser
 * `Size` **[VARCHAR(8)]** [NOT NULL]
   * Number of bytes of each page
 	* `0` - 100000 bytes *(~100 KB)*
-	* `1` - 200000 bytes *(~200 KB)*
-	* `2` - 300000 bytes *(~300 KB)*
-	* `3` - 500000 bytes *(~500 KB)*
-	* `4` - 750000 bytes *(~750 KB)*
-	* `5` - 1000000 bytes *(~1 MB)*
-	* `6` - 1500000 bytes *(~1.5 MB)*
-	* `7` - 2000000 bytes *(~2 MB)*
-	* `8` - 2500000 bytes *(~2.5 MB)*
-	* `9` - 4000000 bytes *(~4 MB)*
-	* `10` - 6000000 bytes *(~6 MB)*
-	* `11` - 8000000 bytes *(~8 MB)*
+	* `1` - 250000 bytes *(~250 KB)*
+	* `2` - 500000 bytes *(~500 KB)*
+	* `3` - 750000 bytes *(~750 KB)*
+	* `4` - 1000000 bytes *(~1 MB)*
+	* `5` - 1500000 bytes *(~1.5 MB)*
+	* `6` - 2000000 bytes *(~2 MB)*
+	* `7` - 2500000 bytes *(~2.5 MB)*
+	* `8` - 4000000 bytes *(~4 MB)*
+	* `9` - 6000000 bytes *(~6 MB)*
+	* `10` - 8000000 bytes *(~8 MB)*
 * `Count` **[VARCHAR(8)]** [NOT NULL]
   * The total number of object files that make up the `Size`.
 	* `0` - 1 file
