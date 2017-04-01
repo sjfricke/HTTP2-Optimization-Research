@@ -3,47 +3,46 @@
 
 print_help() {
 	echo -e "
-	#----------------------------------------------------------------------------
-	### usage (all intputs are ints except for alternate options)
+	----------------------------------------------------------------------------
+	### Usage (all intputs are ints except for alternate options)
 	\e[32m./website_gen.sh\e[0m \e[93mAlternateOption/\e[0m\e[33mNumberofObjects \e[36mObjectStructure\e[0m \e[35mObjectType\e[0m \e[94mMinSizeObject\e[0m \e[34mTotalWebsiteSize\e[0m \e[97mBS\e[0m \e[31mWebsiteName\e[0m
 
-	\e[93m#Alternate Options\e[0m
-	\e[92m##-help prints this page
-	\e[91m##-purge deletes all websites from /var/www/html and sets web counter to 0
+	\e[93m# Alternate Options\e[0m
+	\e[92m## -help prints this page
+	\e[91m## -purge deletes all websites from /var/www/html and sets web counter to 0
 
-	\e[33m#NumberofObjects - how many objects in a webpage\e[0m
+	\e[33m# NumberofObjects - how many objects in a webpage\e[0m
 
-	\e[96m#ObjectStructure - How the objects are arranged in HTML top to bottom
+	\e[96m# ObjectStructure - How the objects are arranged in HTML top to bottom
 	\e[36m## 0 All Max Size
 	## 1 Ascending Size
 	## 2 Descedning Size
 	## 3 Random Placement
 
-	\e[95m#ObjectType - What type of objects to use
+	\e[95m# ObjectType - What type of objects to use
 	\e[35m## 0 All js
 	## 1 All css
 	## 2 All img
 	## 3 All garbage ahref
 	## 4 Random types (multiple of each)
 
-	\e[94m#ObjectMinSize - how small in bytes - Only used for random number generator
+	\e[94m# ObjectMinSize - how small in bytes - Only used for random number generator
 
-	\e[34m#TotalWebsiteSize - how large in bytes (TotalWebsiteSize = Sum(objectsizes))
+	\e[34m# TotalWebsiteSize - how large in bytes (TotalWebsiteSize = Sum(objectsizes))
 
-	\e[97m#BS - buffer strategy for dd - BE CAREFUL WITH THIS\e[0m
+	\e[97m# BS - buffer strategy for dd - BE CAREFUL WITH THIS\e[0m
 
-	\e[31m#WebsiteName - Custom name of website used by script script \e[0m
+	\e[31m# WebsiteName - Custom name of website used by script script \e[0m
 
-	###Note
-	#Sizes of the objects will be as following:
-	All Max size = (TotalWebsiteSize / NumberOfObjects)
-	Asc/Desc = (TotalWebsiteSize/(NumberofObjects^2 + NumberofObjects)) * n where n = 1 to = NumberofObjects
-	Dont ask why, its because MATH
-	Random = Same generation as Asc but placed in a random order
+	### Note
+	# Sizes of the objects will be as following:
+	  - All Max size = (TotalWebsiteSize / NumberOfObjects)
+	  - Asc/Desc = (TotalWebsiteSize/(NumberofObjects^2 + NumberofObjects)) * n where n = 1 to = NumberofObjects
+	  - Dont ask why, its because MATH
+	  - Random = Same generation as Asc but placed in a random order
 
 	\e[8mChristian Rules\e[0m
-
-	#----------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	"
 	return 0
 }
