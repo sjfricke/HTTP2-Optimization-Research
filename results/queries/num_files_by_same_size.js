@@ -6,7 +6,11 @@ var fs = require("fs");
 
 // used to store HTML string to write to file
 // Top part of HTML
-var HTML = "<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script><div id='chart_div'></div> <script>function drawChart(){var data = new google.visualization.DataTable();data.addColumn('string','X');";
+var HTML = "<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>" +
+    "<div id='chart_div'></div>" +
+    "<script>function drawChart(){" +
+    "var data = new google.visualization.DataTable();" +
+    "data.addColumn('number','X');";
 
 // add column for each count value
 for (let i = 0; i < SIZE.length; i++) {
@@ -80,20 +84,26 @@ module.exports = (connection, verbose) => {
 		 */
 		for (let i = 0; i < COUNT.length; i++) {
 
-		    let row_data = [ COUNT[i] ];
+		    let row_data = [ parseInt(COUNT[i]) ]; //parseInt if X row is number and continious
 		    
 		    for (let j = 0; j < SIZE.length;j++) {
 
 			let entries = data[i][j].num_of_entries;
+
+			let total_time = data[i][j].TotalTime / entries;
 			
-			row_data.push( data[i][j].TotalTime / entries  );
+			row_data.push( total_time  );
 			
-			row_data.push( "Avg Send: " +
-				       (data[i][j].Send / entries).toFixed(3) + " ms" +
-				       "\n Avg Wait: " +
-				       (data[i][j].Wait / entries).toFixed(3) + " ms" +
-		 		       "\n Avg Receive : " +
-				       (data[i][j].Receive / entries).toFixed(3) + " ms"
+			row_data.push( "Total Time: " + total_time.toFixed(2) + " ms\n" +
+				       "Files: " + COUNT[i] + "\n" +
+				       "Number of trials: " + data[i][j].num_of_entries + "\n" +
+				       "\n" +
+				       "Avg Send: " +
+				       (data[i][j].Send / entries).toFixed(2) + " ms\n" +
+				       "Avg Wait: " +
+				       (data[i][j].Wait / entries).toFixed(2) + " ms\n" +
+		 		       "Avg Receive : " +
+				       (data[i][j].Receive / entries).toFixed(2) + " ms"
 				     );
 		    }
 		    
@@ -105,7 +115,20 @@ module.exports = (connection, verbose) => {
 		HTML += "data.addRows(" + JSON.stringify(chart_row_data) + ");";
 
 		// TODO give more colors choices
-		HTML += "var options = {title:'Load time over different number of files of same size',hAxis:{title:'Files in Page'},vAxis:{title:'Time (milliseconds)'},colors:['red','green','blue','purple','orange','black'],height: 800,pointSize: 5};var chart = new google.visualization.LineChart(document.getElementById('chart_div'));chart.draw(data, options);}google.charts.load('current', {packages: ['corechart', 'line']});google.charts.setOnLoadCallback(drawChart);</script>";
+		HTML += "var options = {"+
+		    "title:'Load time over different number of files of same size',"+
+		    "hAxis:{title:'Files in Page'},"+
+		    "vAxis:{title:'Time (milliseconds)'},"+
+		    "colors:['Red','Green','Navy','Purple','DarkOrange','Black','Cyan','SteelBlue','Gold','SpringGreen'],"+
+		    "height: 800,"+
+		    "pointSize: 5"+
+		    "};"+
+		    "var chart = new google.visualization.LineChart(document.getElementById('chart_div'));"+
+		    "chart.draw(data, options);}"+
+		    ""+
+		    "google.charts.load('current', {packages: ['corechart', 'line']});"+
+		    "google.charts.setOnLoadCallback(drawChart);"+
+		    "</script>";
 
 		// TODO check if directory exists and different relavent path
 		fs.writeFileSync('./charts/num_files_by_same_size.html', HTML);
