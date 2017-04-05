@@ -108,12 +108,21 @@ connection.connect( (err) => {
  * 2. Parses/cleans/format data
  * 3. Generates chart data
  */
-var query_result;
 async function main_loop() {
     try {
+	let query_result;
+
 	query_result = await require("./queries/num_files_by_same_size.js")(connection, VERBOSE);
-	console.log("num_files_by_same_size: " + query_result);
-//	query_result = await require("./queries/num_files_by_same_size.js")(connection, 1);
+	if (VERBOSE) { console.log("num_files_by_same_size done!\n"); }
+	
+	query_result = await require("./queries/num_files_by_ascending.js")(connection, VERBOSE);
+	if (VERBOSE) { console.log("num_files_by_ascending done!\n"); }
+	
+	query_result = await require("./queries/num_files_by_descending.js")(connection, VERBOSE);
+	if (VERBOSE) { console.log("num_files_by_descending done!\n"); }
+	
+	query_result = await require("./queries/num_files_by_random.js")(connection, VERBOSE);
+	if (VERBOSE) { console.log("num_files_by_random done!\n"); }
 
     } catch (error) {
 	console.error(error);
