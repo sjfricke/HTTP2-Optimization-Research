@@ -8,10 +8,12 @@
   * ~~Test different case~~
   * ~~Make sure file permission is correct~~  
   * ~~make `input.txt` file with all input~~
-  * Add more variations for different count and sizes
+  * ~~Add more variations for different count and sizes~~
+  * Think of anything to improve script
 * ~~Script to call script #ScriptScript **Christian Overlord**~~
 * ~~Simulate loading the sites and getting HAR data **Spencer**~~
   * ~~Run headless Chrome~~
+  * Find possible other ways to run it headless in chrome
   * Run headless FireFox
 * ~~http2 on apache **Christian Overlord**~~ **Will do later**
   * ~~`node2.local`~~
@@ -27,8 +29,12 @@
 * ~~Setup storage on Pi and Server **Spencer**~~
 * ~~setup a MySQL database **Spencer**~~
 * ~~setup website for node1/2 server **Spencer**~~
-* Random website but same total size **Christian Overlord**
+* ~~Random website but same total size **Christian Overlord**~~
 * ~~Create mapping system **Christian Overlord**~~
   * ~~Parse mapping system **Spencer**~~
-* Figure out how to query data and get stats from it **Everyone**
+* ~~Figure out how to query data and get stats from it **Everyone**~~
 * Add more queries to query list
+* See if gzip is a factor
+* Make sure data is valid being stores
+* Cleaning data tool
+* Add local network support for TLS
