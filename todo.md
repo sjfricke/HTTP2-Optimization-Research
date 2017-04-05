@@ -37,3 +37,4 @@
 * See if gzip is a factor
 * Make sure data is valid being stores
 * Cleaning data tool
+* Add local network support for TLS
