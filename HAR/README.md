@@ -1,35 +1,18 @@
 # HAR Headless Parser
 This tool is used to automatically grab the HAR files from Chromium and then send them off to a database where they will be queried and analise after. 
 
-* Headless == running without a graphical interface, like in a terminal
-* - [What you need installed (your favorite part right!)](#what-you-need-installed-your-favorite-part-right)
+> DISCLAIMER: None of this was ran on Windows, everything was done on Ubuntu 16.04, be advise with other unix enviroments
+
+* - [What you need installed](#what-you-need-installed)
 * - [How to run](#how-to-run)
+* - [How to use](#how-to-use)
+* - [About HAR files](#about-har-files)
 
-## How to use
-
-```
-Usage: node HAR_Headless_Parser [options]...
-
-Options:
-
-  -h, --help           Output usage information
-      --dbhost <IP>    IP address for database *[Will prompt otherwise]* *[Default: 127.0.0.1]*
-      --dbport <port>  Port on machine to access database *[Will prompt otherwise]* *[Default: 3306]*
-      --dbuser <user>  User of database *[Will prompt otherwise]*
-      --dbpass <pass>  Password of database *[Will prompt otherwise]*
-      --dbname <name>  Name of database to store data *[Will prompt otherwise]*
-  -i, --input <file>   File of website input list in line-by-line fashion *[Will prompt otherwise]*
-  -p, --port <port>    Remote Debugging Protocol port *[Default: 9222]*
-  -v, --verbose        Enable verbose output on stdout
-```
-
-## What you need installed (your favorite part right!)
-* You will need to make sure you have a MySQL database to send the data too
-  * **NOTE:** the machine running this parser doesn't need to have the database
+## What you need installed
+* You will need to make sure you have a **MySQL Database** to send the data too
+  * **NOTE:** the machine running this parser doesn't need to have the database, you can enter database IP address
   * We may add support for more DB options in future
   * We are also assuming you can manage getting a MySQL Database up to use
-* First you will need python as the parsing tool is ran in python
-* You will need the [HAR_parser.py](./HAR_parser/HAR_parser.py) script in this directory or in the [HAR Parser subfolder](./HAR_parser)
 * You will need [Node.js](https://nodejs.org/en/) which is used to run the main script
   * **YOU NEED VERSION 6 or greater for node for es6 support!**
   * Use [these instructions](http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/) for install the newer version
@@ -43,7 +26,7 @@ Options:
 * You will need Xvfb to simulate a graphical screen in a terminal as Chromium only runs headless with a place to put the graphical memory data
   * `sudo apt-get install xvfb`
   * note the program when run is a captial X for `Xvfb` (NOT `xvfb`)
-    * `xvfb-run` is a different program used to run xvfb which is not how we kick it off
+    * `xvfb-run` is a different program used to run xvfb which is **not** how we kick it off
 
 ## How to run
 * First off you will need to setup Xvfb (Thanks to [Serrie for these instruction](http://askubuntu.com/questions/754382/how-do-i-start-chromium-browser-in-headless-mode-extension-randr-missing-on-d))
@@ -62,8 +45,43 @@ Options:
     * `xset q`
 * Now we can run chrome in headless debug mode
   * `chromium-browser --remote-debugging-port=9222 --enable-benchmarking --enable-net-benchmarking --incognito &`
+	* We use incognito to help prevent any unwanted caching
+	* the `&` at the end tells it to run in background
   * To make sure the chrome headless is up and running run
 	* `curl http://localhost:9222/json`
+	* You should see some json printed which means you are all ready to go
 * Now we run our script
   * `node HAR_Headless_Parser.js`
- 
+
+## How to use
+
+```
+Usage: node HAR_Headless_Parser [options]...
+
+Options:
+
+  -h, --help           Output usage information
+      --dbhost <IP>    IP address for database [Will prompt otherwise] [Default: 127.0.0.1]
+      --dbport <port>  Port on machine to access database [Will prompt otherwise] [Default: 3306]
+      --dbuser <user>  User of database [Will prompt otherwise]
+      --dbpass <pass>  Password of database [Will prompt otherwise]
+      --dbname <name>  Name of database to store data [Will prompt otherwise]
+  -i, --input <file>   File of website input list in line-by-line fashion [Will prompt otherwise]
+  -p, --port <port>    Remote Debugging Protocol port [Default: 9222]
+  -v, --verbose        Enable verbose output on stdout
+```
+
+#### Some Examples:
+* `node HAR_Headless_Parser.js --dbhost 127.0.0.1 --dbuser admin --dbname har_db -i ../website_gen/website_lists/web_list`
+  * Here we save time from it having to prompt us and pass it the IP, user, and database
+  * We also pass it the file location where the list of website is to run against
+* `node HAR_Headless_Parser.js -p 3000 -v`
+  * If we are running our browser in debug mode on port 3000 we can set it here
+  * Verbose mode will display extra information about the status of script
+
+## About HAR Files
+
+* [What is a HAR file](https://blog.stackpath.com/glossary/har-file/)
+* [How to user the HAR Viewer](http://www.softwareishard.com/blog/har-viewer/)
+* [HAR Viewer](http://www.softwareishard.com/har/viewer/)
+* [Explanation of HAR objects](http://www.softwareishard.com/blog/har-12-spec/)
