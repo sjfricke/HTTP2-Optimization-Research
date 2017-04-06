@@ -31,6 +31,8 @@ print_help() {
 	\e[34m# TotalWebsiteSize - how large in bytes (TotalWebsiteSize = Sum(objectsizes))
 
 	\e[97m# BS - buffer strategy for dd - BE CAREFUL WITH THIS\e[0m
+        ## If your TotalWebsiteSize is 1MB or greater set to 100
+        ## Otherwise set as 1 to be safe
 
 	\e[31m# WebsiteName - Custom name of website used by script script \e[0m
 
