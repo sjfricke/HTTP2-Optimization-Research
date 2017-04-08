@@ -121,6 +121,7 @@ module.exports = (connection, verbose) => {
 		    "vAxis:{title:'Time (milliseconds)'},"+
 		    "colors:['Red','Green','Navy','Purple','DarkOrange','Black','Cyan','SteelBlue','Gold','SpringGreen'],"+
 		    "height: 800,"+
+		    "explorer: {},"+
 		    "pointSize: 5"+
 		    "};"+
 		    "var chart = new google.visualization.LineChart(document.getElementById('chart_div'));"+
