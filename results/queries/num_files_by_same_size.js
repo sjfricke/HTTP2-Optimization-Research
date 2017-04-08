@@ -22,9 +22,9 @@ module.exports = (connection, verbose) => {
     return new Promise(function(resolve, reject) {
 	connection.query(
 	    `SELECT Website.WebsiteID, Size, Count, Structure, 
-             MAX(TotalTime), SUM(ResponseTransferSize), AVG(Send), AVG(Wait), AVG(Receive) 
+             MAX(TotalTime), AVG(Send), AVG(Wait), AVG(Receive) 
              FROM Website INNER JOIN Entries ON Website.WebsiteID = Entries.WebsiteID  
-             WHERE (ResponseContentLength IS NOT NULL) AND (Structure = "a") 
+             WHERE (ResponseContentLength IS NOT NULL) AND (Structure = "a")
              GROUP BY WebsiteID;`,
 	    (error, results, fields) => {
 		
@@ -64,7 +64,7 @@ module.exports = (connection, verbose) => {
 		for (var i = 0; i < results.length; i++) {
 		    var count = parseInt(results[i]["Count"]);
 		    var size = parseInt(results[i]["Size"]);
-
+ 
 		    data[count][size].num_of_entries++;
 		    data[count][size].TotalTime += results[i]['MAX(TotalTime)'];
 		    data[count][size].Send += results[i]['AVG(Send)'];

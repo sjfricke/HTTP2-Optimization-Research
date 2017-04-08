@@ -22,7 +22,7 @@ module.exports = (connection, verbose) => {
     return new Promise(function(resolve, reject) {
 	connection.query(
 	    `SELECT Website.WebsiteID, Size, Count, Structure, 
-             MAX(TotalTime), SUM(ResponseTransferSize), AVG(Send), AVG(Wait), AVG(Receive) 
+             MAX(TotalTime), AVG(Send), AVG(Wait), AVG(Receive) 
              FROM Website INNER JOIN Entries ON Website.WebsiteID = Entries.WebsiteID  
              WHERE (ResponseContentLength IS NOT NULL) AND (Structure = "b") 
              GROUP BY WebsiteID;`,
