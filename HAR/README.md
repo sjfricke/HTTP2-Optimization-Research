@@ -80,7 +80,7 @@ Options:
   * Verbose mode will display extra information about the status of script
 
 ## About HAR Files
-
+* [Offical HAR Spec Sheet](https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/HAR/Overview.html)
 * [What is a HAR file](https://blog.stackpath.com/glossary/har-file/)
 * [How to user the HAR Viewer](http://www.softwareishard.com/blog/har-viewer/)
 * [HAR Viewer](http://www.softwareishard.com/har/viewer/)
