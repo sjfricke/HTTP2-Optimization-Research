@@ -112,6 +112,8 @@ async function main_loop() {
     try {
 	let query_result;
 
+//	query_result = await require("./queries/outlier_finder.js")(connection, VERBOSE);
+
 	query_result = await require("./queries/num_files_by_same_size.js")(connection, VERBOSE);
 	if (VERBOSE) { console.log("num_files_by_same_size done!\n"); }
 	
