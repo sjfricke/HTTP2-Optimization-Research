@@ -168,7 +168,7 @@ do
 		dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS )) >& /dev/null
 	;;
 	3)#Random
-		RAND=$( python -c "import random; print random.randrange(1, $(( OBJ_COUNT + 1 )) );" )
+		RAND=$((1 + RANDOM % OBJ_COUNT ))
 		while [ $(( LIST[RAND] )) == 1 ]; do
 			if (( RAND >= OBJ_COUNT ));
 			then
