@@ -11,8 +11,8 @@ const async = require('async');
 /********************************************
 Globals
 ********************************************/
-const COMPUTER_TYPE = 1; // computer type 0 == desktop, 1 == pi //TODO
-const CONNECTION_PATH = 1; // connection path 0 == local, 1 == internet //TODO
+const COMPUTER_TYPE = 1; //TODO 0 == H2, 1 == http1
+const CONNECTION_PATH = 0; // 0 || 1 == nginx, 2 == apache W/SP, 3 == apache Wo/SP
 
 var DB_NAME, DB_HOST, DB_USER, DB_PASS; // used to log into database
 var INPUT_FILE; // where to grab the websites
@@ -152,7 +152,7 @@ function parse_loop() {
     }
 
     // loads site and waits for event
-    HAR_LOAD = chc.load(WEBSITE_LIST[PARSE_LOOP_COUNT]);
+    HAR_LOAD = chc.load(WEBSITE_LIST[PARSE_LOOP_COUNT], {"port": PORT});
 
     HAR_LOAD.on('connect', function () {
         if (VERBOSE) { console.log(WEBSITE_LIST[PARSE_LOOP_COUNT] + ' connected to Chrome\n'); }
@@ -170,7 +170,7 @@ function parse_loop() {
 
 
 	// gets website obj data and parses it out for use in query insert
-	var website_obj = har.log.entries[0].request.headers[0].value.replace(/[/]+/g, ''); // returns ex: W_1_2_a
+	var website_obj = WEBSITE_LIST[PARSE_LOOP_COUNT].substr(WEBSITE_LIST[PARSE_LOOP_COUNT].lastIndexOf("/")+1) // returns ex: W_1_2_a
 	var obj_type = website_obj.split("_")[0];
 	var obj_size  = website_obj.split("_")[1];
 	var obj_count = website_obj.split("_")[2];
@@ -285,7 +285,7 @@ function parse_loop() {
 			console.log("Parse loop ", PARSE_LOOP_COUNT, "of ", WEBSITE_LIST.length-1, " complete"); // only non-verbose printout
 			PARSE_LOOP_COUNT++;
 			parse_loop(); // recursion call
-
+			// setTimeout(function(){ parse_loop(); }, 500); TODO, used on slow computers
 	     }); // forEachOfSeries
 
 	}); // website_query
