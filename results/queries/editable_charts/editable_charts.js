@@ -6,36 +6,26 @@ const OBJECTSTRUCTURE = ['a', 'b', 'c', 'd'];
 
 var fs = require("fs");
 
-// used to store HTML string to write to file
+
 // Top part of HTML
-// var HTML = "<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>" +
-//     "<div id='chart_div'></div>" +
-//     "<script>function drawChart(){" +
-//     "var data = new google.visualization.DataTable();" +
-//     "data.addColumn('number','X');";
 
-/** GENERATE HTML AND CHECKBOXES **/
 
+/** HEADER **/
 HTML = `<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>`; //CHARTS loader
-HTML += `  <script type="text/javascript" src="https://www.google.com/jsapi"></script>`; //JS API
+HTML += `<script type="text/javascript" src="https://www.google.com/jsapi"></script>`; //JS API
 HTML+= `<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>`; //jQuery
 HTML += `<ul id="series" style="list-style: none">`;
 
-//Generate Checkboxes
+/** GENERATE HTML AND CHECKBOXES **/
 //objectOrder vs Sizes
-var count = 1;
-for (let i = 0; i < OBJECTSTRUCTURE.length; i++ ){ // Iterate through Object structure
-    for (let j = 0; j < COUNT.length; j++){         // Iterate through count
+var count = 0;
+    for (let i = 0; i < OBJECTSTRUCTURE.length; i++){         // Iterate through count
 
-        HTML +=  `<li><input type="checkbox" name="series" value="` +  count + `" checked="true" />` + objOrder(OBJECTSTRUCTURE[i]) + `-`+ COUNT[j] + `</li>`;
+        HTML +=  `<li><input type="checkbox" name="series" value="` +  count + `" checked="true" />` + objOrder(OBJECTSTRUCTURE[i]) + `</li>`;
         HTML += "<br>";
         count++;
 
-    }
 }
-// <li><input type="checkbox" name="series" value="1" checked="true" />Series 1 </li>
-// <li><input type="checkbox" name="series" value="2" checked="true" />Series 2 </li>
-// <li><input type="checkbox" name="series" value="3" checked="true" />Series 3 </li>
 
 HTML += `</ul><div id="chart_div"></div>`; // DIV FOR CHART TO LOAD INTO
 
@@ -52,9 +42,22 @@ function drawChart() {
 
 HTML+= `data.addColumn('number', 'Item');`;
 
+//TODO FIX COLUMNS THAT BELONG TO EACH DATA SET
+var ss = []; //no need of zero(count) b/c javascript already adds it in html site
+var asc = [];
+var desc = [];
+var rand = [];
+var row_id = 1;
+
 // add column for each count value
 for (let i = 0; i < OBJECTSTRUCTURE.length; i++){
     for (let j = 0; j < SIZE.length; j++) {
+        //separates number of columns belonging to each structure type to be able to
+        if (i == 0){ss.push(row_id);row_id++; ss.push(row_id);row_id++;}
+        if (i == 1){asc.push(row_id);row_id++; asc.push(row_id);row_id++;} //
+        if (i == 2){desc.push(row_id);row_id++; desc.push(row_id);row_id++;}
+        if (i == 3){rand.push(row_id);row_id++; rand.push(row_id);row_id++;}
+        //Add column to table
         HTML += "data.addColumn('number', '" + objOrder(OBJECTSTRUCTURE[i]) +' - ' + SIZE[j] + "');data.addColumn({type: 'string', role: 'tooltip'});"
         }
 }
@@ -140,13 +143,15 @@ module.exports = (connection, verbose) => {
 
 
                 //add values in order of ss, asc, desc, rand
-
+                //Arrays to update values
 
                     for (let i = 0; i < COUNT.length; i++) {
                         let row_data = [parseInt(COUNT[i])]; //parseInt if X row is number and continuous
                         for(let j = 0; j < OBJECTSTRUCTURE.length; j++){
+
                             for (let k = 0; k < SIZE.length; k++) {
-                                // want to add items in this order: // [count, ss1, ss2, ss2, asc1, asc2, asc3 ]
+
+                                // want to add items in this order: // [count, ss1, ss1_tip, ss2, ss2_tip asc1, asc1_tip, asc2_asc_2tip]
                                 let entries = data[j][i][k].num_of_entries; //NOTE ORDER [STRUCTURE][COUNT][SIZE]
                                 let total_time = data[j][i][k].TotalTime / entries;
 
@@ -181,8 +186,8 @@ module.exports = (connection, verbose) => {
                     "hAxis:{title:'Files in Page'},"+
                     "vAxis:{title:'Time (milliseconds)'},"+
                     "colors:['Red','Green','Navy','Purple','DarkOrange','Black','Cyan','SteelBlue','Gold','SpringGreen'],"+
-                    "height: 1500,"+
-                    "width:1024,"+
+                    "height: 1200,"+
+                    "width:1200,"+
                     "explorer: {},"+
                     "pointSize: 5,"+
                     "strictFirstColumnType: true"+
@@ -195,18 +200,59 @@ module.exports = (connection, verbose) => {
     
     var chart = new google.visualization.LineChart($('#chart_div')[0]);
     chart.draw(view, options);`
+
+
                     /** HTML TO UPDATE CHECKBOXES **/
 
+
+// HTML +=`$('#series').find(':checkbox').change(function () {
+//         var cols = [0];
+//         $('#series').find(':checkbox:checked').each(function () {
+//             console.log(this);
+//             //let structure = parseInt($(this).attr('value'));
+//             //if(structure == 0){cols.concat(ss)};
+//             //if(structure == 1){cols.concat(asc)};
+//             //if(structure == 2){cols.concat(desc)};
+//             //if(structure == 3){cols.concat(rand)};
+//
+//         });
+//         view.setColumns(cols);
+//         chart.draw(view, options);
+//     });
+// }`;
+
     HTML +=`$('#series').find(':checkbox').change(function () {
-        var cols = [0];
-        $('#series').find(':checkbox:checked').each(function () {
+        var cols = [0];` +
+        `var ss =` + JSON.stringify(ss) + `;` +
+        `var asc = `+ JSON.stringify(asc) + `;` +
+        `var desc = `+ JSON.stringify(desc) + `;` +
+        `var rand = `+ JSON.stringify(rand) + `;` +
+        `$('#series').find(':checkbox:checked').each(function () {
             console.log(this);
-            cols.push(parseInt($(this).attr('value')));
+            //cols.push(parseInt($(this).attr('value')));
+            let v = parseInt($(this).attr('value'));
+            if(v == 0){cols = cols.concat(ss);}
+            if(v == 1){cols = cols.concat(asc);}
+            if(v == 2){cols = cols.concat(desc);}
+            if(v == 3){cols = cols.concat(rand);}
+            
+            
+            
         });
         view.setColumns(cols);
         chart.draw(view, options);
     });
 }`;
+//     HTML +=`$('#series').find(':checkbox').change(function () {
+//         var cols = [0];
+//         $('#series').find(':checkbox:checked').each(function () {
+//             console.log(this);
+//             cols.push(parseInt($(this).attr('value')));
+//         });
+//         view.setColumns(cols);
+//         chart.draw(view, options);
+//     });
+// }`;
 
                 //END JAVASCRIPT
                 HTML += `</script>`;
