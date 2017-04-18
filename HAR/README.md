@@ -14,18 +14,19 @@ This tool is used to automatically grab the HAR files from Chromium and then sen
   * We may add support for more DB options in future
   * We are also assuming you can manage getting a MySQL Database up to use
 * You will need [Node.js](https://nodejs.org/en/) which is used to run the main script
-  * **YOU NEED VERSION 6 or greater for node for es6 support!**
+  * **YOU NEED VERSION 6 or greater for node for [ES6 support!](https://nodejs.org/en/docs/es6/)**
   * Use [these instructions](http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/) for install the newer version
     * `curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -`
     * `sudo apt install nodejs`
     * `node -v` to verify
 * With Node.js installed run `npm install` in this directory to load all the packages needed
 * You will need Chromium
-  * Ubuntu and Raspbian use `sudo apt-get install chromium-browser`
-    * make sure to do a `sudo apt-get update` and `sudo apt-get upgrade` first
+  * Ubuntu and Raspbian use `sudo apt install chromium-browser`
+    * make sure to do a `sudo apt update` and `sudo apt upgrade` first
+  * **Note:** We have tried this on `google-chrome` but until we can verify the `--headless` feature works for sure use chromium if possible 
 * You will need Xvfb to simulate a graphical screen in a terminal as Chromium only runs headless with a place to put the graphical memory data
-  * `sudo apt-get install xvfb`
-  * note the program when run is a captial X for `Xvfb` (NOT `xvfb`)
+  * `sudo apt install xvfb`
+  * **Note:** the program when run is a captial X for `Xvfb` (NOT `xvfb`)
     * `xvfb-run` is a different program used to run xvfb which is **not** how we kick it off
 
 ## How to run
@@ -45,8 +46,10 @@ This tool is used to automatically grab the HAR files from Chromium and then sen
     * `xset q`
 * Now we can run chrome in headless debug mode
   * `chromium-browser --remote-debugging-port=9222 --enable-benchmarking --enable-net-benchmarking --incognito &`
-	* We use incognito to help prevent any unwanted caching
-	* the `&` at the end tells it to run in background
+	* `--remote-debugging-port=9222` is essentially chrome's API to dev tools stuff - [more details here](https://developer.chrome.com/devtools/docs/debugger-protocol)
+	* `--enable-benchmarking` and  `--enable-net-benchmarking` to enable the Javascript interface that allows `chrome-har-capturer` to flush the DNS cache and the socket pool before loading each URL.
+	* `--incognito` to help prevent any unwanted caching
+	* `&` at the end tells it to run in background
   * To make sure the chrome headless is up and running run
 	* `curl http://localhost:9222/json`
 	* You should see some json printed which means you are all ready to go
