@@ -1,0 +1,38 @@
+### Website_Gen Configurations ###
+
+# Domain of website aiming at
+DOMAIN http://www.example.com
+
+# Host directory is used to aim where all the websites will be created
+HOST_DIR /var/www/html/
+
+# Count file pointers give a location where a count of websites is held
+# Changing location will reset count and one should purge before changing
+COUNT_FP /var/www/.web_count
+
+# Web list file point is used to set where the output of websites created is put
+# Changing location will have the list create from scratch so one should purge before changing
+
+
+### Script_Script Configurations ###
+
+# List letters of object types wanting to use
+# Each letter added is included when generating websites
+# Possible Letters W X Y Z
+# More info about object types: https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/HAR/mysql#website-table
+OBJECT_TYPE WXYZ
+
+# List all the different sizes of websites created
+# Values are all in bytes (1000000 == 1MB)
+# Order of sizes listed is how it is indexed in url (first size is indexed at 0)
+OBJECT_SIZES 100000 250000 500000 750000 1000000 1500000 2000000 2500000 4000000 6000000 8000000
+
+# List all the different number of files each size is broken down to
+# Order of Count listed is how it is indexed in url (first count is indexed at 0)
+OBJECT_COUNTS 1 2 3 4 5 6 7 8 9 10 15 20 25 30 35 50 70 90 100 125 150 175 200
+
+# List letters of object structures wanting to use
+# Each letter added is included when generating websites
+# Possible letters A B C D
+# More info about object types: https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/HAR/mysql#website-table
+OBJECT_STRUCTURE ABCD
