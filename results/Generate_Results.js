@@ -117,9 +117,13 @@ async function main_loop() {
 //    query_result = await require("./queries/http1_vs_http2.js")(connection, VERBOSE);
 //    if (VERBOSE) { console.log("http1_vs_http2 done!\n"); }
 
-    query_result = await require("./queries/structures.js")(connection, VERBOSE);
-    if (VERBOSE) { console.log("structures done!\n"); }
+//    query_result = await require("./queries/structures.js")(connection, VERBOSE);
+//    if (VERBOSE) { console.log("structures done!\n"); }
 
+    query_result = await require("./queries/web_servers.js")(connection, VERBOSE);
+    if (VERBOSE) { console.log("web_servers done!\n"); }
+
+	
     } catch (error) {
 	console.error(error);
     }
