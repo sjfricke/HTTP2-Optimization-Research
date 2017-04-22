@@ -1,0 +1,78 @@
+<html>
+  <head>
+
+  </head>
+
+  <body>
+    <!--Div that will hold the dashboard-->
+    <div id="dashboard_div">
+      <!--Divs that will hold each control and chart-->
+      <div id="filter_div"></div>
+      <div id="chart_div"></div>
+    </div>
+    <button onclick="test(1)"> test </button>
+  </body>
+
+      <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawTrendlines);
+var view, options, chart;
+function drawTrendlines() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('number','X');
+      data.addColumn('number', '100 KB');
+      data.addColumn({type: 'string', role: 'tooltip'});
+      data.addColumn('number', '250 KB');
+      data.addColumn({type: 'string', role: 'tooltip'});
+
+      data.addRows([
+        [0, 0, "a", 0, "b"],
+        [12, 1, "a", 22, "b"],
+        [18, 2, "a", 44, "b"], 
+        [24, 3, "a", 52, "b"], 
+        [30, 4, "a", 47, "b"], 
+        [36, 5, "a", 54, "b"], 
+        [42, 6, "a", 55, "b"], 
+        [48, 7, "a", 64, "b"], 
+        [54, 8, "a", 63, "b"], 
+        [60, 9, "a", 56, "b"], 
+        [66, 10, "a", 62, "b"]
+        ]);
+      
+
+		options = {
+	      	width: 800,
+	        height: 400,
+	        explorer: {},
+	        hAxis: {
+	          title: 'Time'
+	        },
+	        vAxis: {
+	          title: 'Popularity'
+	        },
+	        colors:['Red','Green','Navy','Purple','DarkOrange','Black','Cyan','SteelBlue','Gold','SpringGreen'],
+	        pointSize: 5,        
+	        legend: 'right',	
+	        trendlines: {
+	          0: {type: 'linear', color: 'Gold', opacity: 1},
+	          1: {type: 'linear', color: 'Purple', opacity: 1}
+	        }
+        };
+	      
+
+        view = new google.visualization.DataView(data);
+
+       chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+       chart.draw(view, options);
+    }
+
+    function test(a) {
+    	view.setColumns( [0, a] );
+    	chart.draw(view, options);
+    }
+    </script>
+
+</html>

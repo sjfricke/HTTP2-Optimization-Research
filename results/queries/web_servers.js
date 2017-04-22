@@ -222,7 +222,7 @@ module.exports = (connection, verbose) => {
 		    "</html>";
 
 		// TODO check if directory exists and different relavent path
-		fs.writeFileSync('./charts/structures.html', HTML);
+		fs.writeFileSync('./charts/web_servers.html', HTML);
 		
 		return resolve(true);
 	    });
