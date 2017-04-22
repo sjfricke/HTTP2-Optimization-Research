@@ -2,39 +2,56 @@
 const COUNT = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "15", "20", "25", "30", "35", "50", "70", "90", "100", "125", "150", "175", "200"];
 // Each column has a index after saved for tooltips
 const COLUMNS = [
-	{ name : "1 MB - HTTP1.1 - Same Size",	ResponseHttpVersion : "http/1.1",	Size : 4, Structure : "a", data : [] }, // 1
-	{ name : "1 MB - HTTP2 - Same Size",   	ResponseHttpVersion : "h2",       	Size : 4, Structure : "a", data : [] }, // 3
-	{ name : "1 MB - HTTP1.1 - Ascending", 	ResponseHttpVersion : "http/1.1", 	Size : 4, Structure : "b", data : [] }, // 5
-	{ name : "1 MB - HTTP2 - Ascending",   	ResponseHttpVersion : "h2",       	Size : 4, Structure : "b", data : [] }, // 7
-	{ name : "1 MB - HTTP1.1 - Descending", ResponseHttpVersion : "http/1.1", 	Size : 4, Structure : "c", data : [] }, // 9
-	{ name : "1 MB - HTTP2 - Descending",  	ResponseHttpVersion : "h2",       	Size : 4, Structure : "c", data : [] }, // 11
-	{ name : "1 MB - HTTP1.1 - Random", 	ResponseHttpVersion : "http/1.1", 	Size : 4, Structure : "d", data : [] }, // 13 
-	{ name : "1 MB - HTTP2 - Random", 	ResponseHttpVersion : "h2", 		Size : 4, Structure : "d", data : [] }, // 15
-	{ name : "2 MB - HTTP1.1 - Same Size",	ResponseHttpVersion : "http/1.1",	Size : 6, Structure : "a", data : [] }, // 17
-	{ name : "2 MB - HTTP2 - Same Size",   	ResponseHttpVersion : "h2",       	Size : 6, Structure : "a", data : [] }, // 19
-	{ name : "2 MB - HTTP1.1 - Ascending", 	ResponseHttpVersion : "http/1.1", 	Size : 6, Structure : "b", data : [] }, // 21
-	{ name : "2 MB - HTTP2 - Ascending",   	ResponseHttpVersion : "h2",       	Size : 6, Structure : "b", data : [] }, // 23
-	{ name : "2 MB - HTTP1.1 - Descending", ResponseHttpVersion : "http/1.1", 	Size : 6, Structure : "c", data : [] }, // 25
-	{ name : "2 MB - HTTP2 - Descending",  	ResponseHttpVersion : "h2",       	Size : 6, Structure : "c", data : [] }, // 27
-	{ name : "2 MB - HTTP1.1 - Random", 	ResponseHttpVersion : "http/1.1", 	Size : 6, Structure : "d", data : [] }, // 29
-	{ name : "2 MB - HTTP2 - Random", 	ResponseHttpVersion : "h2", 		Size : 6, Structure : "d", data : [] }, // 31
-	{ name : "4 MB - HTTP1.1 - Same Size",	ResponseHttpVersion : "http/1.1",	Size : 8, Structure : "a", data : [] }, // 33
-	{ name : "4 MB - HTTP2 - Same Size",   	ResponseHttpVersion : "h2",       	Size : 8, Structure : "a", data : [] }, // 35
-	{ name : "4 MB - HTTP1.1 - Ascending", 	ResponseHttpVersion : "http/1.1", 	Size : 8, Structure : "b", data : [] }, // 37
-	{ name : "4 MB - HTTP2 - Ascending",   	ResponseHttpVersion : "h2",       	Size : 8, Structure : "b", data : [] }, // 39
-	{ name : "4 MB - HTTP1.1 - Descending", ResponseHttpVersion : "http/1.1", 	Size : 8, Structure : "c", data : [] }, // 41
-	{ name : "4 MB - HTTP2 - Descending",  	ResponseHttpVersion : "h2",       	Size : 8, Structure : "c", data : [] }, // 43
-	{ name : "4 MB - HTTP1.1 - Random", 	ResponseHttpVersion : "http/1.1", 	Size : 8, Structure : "d", data : [] }, // 45
-	{ name : "4 MB - HTTP2 - Random", 	ResponseHttpVersion : "h2", 		Size : 8, Structure : "d", data : [] }	// 47
+	{ name : "1 MB - Nginx",	Size : 4, ConnectionPath : 1, Structure : "a", data : [] }, // 1
+	{ name : "1 MB - Apache",   	Size : 4, ConnectionPath : 2, Structure : "a", data : [] }, // 3
+        { name : "1 MB - Apache W/oSP",	Size : 4, ConnectionPath : 3, Structure : "a", data : [] }, // 5
+	{ name : "2 MB - Nginx",	Size : 6, ConnectionPath : 1, Structure : "a", data : [] }, // 7
+	{ name : "2 MB - Apache",   	Size : 6, ConnectionPath : 2, Structure : "a", data : [] }, // 9
+        { name : "2 MB - Apache W/oSP",	Size : 6, ConnectionPath : 3, Structure : "a", data : [] }, // 11
+	{ name : "4 MB - Nginx",  	Size : 8, ConnectionPath : 1, Structure : "a", data : [] }, // 13
+	{ name : "4 MB - Apache", 	Size : 8, ConnectionPath : 2, Structure : "a", data : [] }, // 15
+        { name : "4 MB - Apache W/oSP",	Size : 8, ConnectionPath : 3, Structure : "a", data : [] }, // 17 //
+     	{ name : "1 MB - Nginx",	Size : 4, ConnectionPath : 1, Structure : "b", data : [] }, // 19
+	{ name : "1 MB - Apache",   	Size : 4, ConnectionPath : 2, Structure : "b", data : [] }, // 21
+        { name : "1 MB - Apache W/oSP",	Size : 4, ConnectionPath : 3, Structure : "b", data : [] }, // 23
+	{ name : "2 MB - Nginx",	Size : 6, ConnectionPath : 1, Structure : "b", data : [] }, // 25
+	{ name : "2 MB - Apache",   	Size : 6, ConnectionPath : 2, Structure : "b", data : [] }, // 27
+        { name : "2 MB - Apache W/oSP",	Size : 6, ConnectionPath : 3, Structure : "b", data : [] }, // 29
+	{ name : "4 MB - Nginx",  	Size : 8, ConnectionPath : 1, Structure : "b", data : [] }, // 31
+	{ name : "4 MB - Apache", 	Size : 8, ConnectionPath : 2, Structure : "b", data : [] }, // 33
+        { name : "4 MB - Apache W/oSP",	Size : 8, ConnectionPath : 3, Structure : "b", data : [] }, // 35 //
+	{ name : "1 MB - Nginx",	Size : 4, ConnectionPath : 1, Structure : "c", data : [] }, // 37
+	{ name : "1 MB - Apache",   	Size : 4, ConnectionPath : 2, Structure : "c", data : [] }, // 39
+        { name : "1 MB - Apache W/oSP",	Size : 4, ConnectionPath : 3, Structure : "c", data : [] }, // 41
+	{ name : "2 MB - Nginx",	Size : 6, ConnectionPath : 1, Structure : "c", data : [] }, // 43
+	{ name : "2 MB - Apache",   	Size : 6, ConnectionPath : 2, Structure : "c", data : [] }, // 45
+        { name : "2 MB - Apache W/oSP",	Size : 6, ConnectionPath : 3, Structure : "c", data : [] }, // 47
+	{ name : "4 MB - Nginx",  	Size : 8, ConnectionPath : 1, Structure : "c", data : [] }, // 49
+        { name : "4 MB - Apache", 	Size : 8, ConnectionPath : 2, Structure : "c", data : [] }, // 51
+        { name : "4 MB - Apache W/oSP",	Size : 8, ConnectionPath : 3, Structure : "c", data : [] }, // 53 //
+	{ name : "1 MB - Nginx",	Size : 4, ConnectionPath : 1, Structure : "d", data : [] }, // 55
+	{ name : "1 MB - Apache",   	Size : 4, ConnectionPath : 2, Structure : "d", data : [] }, // 57
+        { name : "1 MB - Apache W/oSP",	Size : 4, ConnectionPath : 3, Structure : "d", data : [] }, // 59
+	{ name : "2 MB - Nginx",	Size : 6, ConnectionPath : 1, Structure : "d", data : [] }, // 61
+	{ name : "2 MB - Apache",   	Size : 6, ConnectionPath : 2, Structure : "d", data : [] }, // 63
+        { name : "2 MB - Apache W/oSP",	Size : 6, ConnectionPath : 3, Structure : "d", data : [] }, // 65
+	{ name : "4 MB - Nginx",  	Size : 8, ConnectionPath : 1, Structure : "d", data : [] }, // 67
+	{ name : "4 MB - Apache", 	Size : 8, ConnectionPath : 2, Structure : "d", data : [] }, // 69
+        { name : "4 MB - Apache W/oSP",	Size : 8, ConnectionPath : 3, Structure : "d", data : [] }  // 71
+
 ];
 // all groups need zero index for the X column
 const GROUPS = [
-	{ name : "Same Size", 	index : [0,1,2,3,4,17,18,19,20,33,34,35,36] 	},
-	{ name : "Ascending",	index : [0,5,6,7,8,21,22,23,24,37,38,39,40]  	},
-	{ name : "Descending", 	index : [0,9,10,11,12,25,26,27,28,41,42,43,44]	},
-	{ name : "Random", 		index : [0,13,14,15,16,29,30,31,32,45,46,47,48]	},
-	{ name : "HTTP/1.1 (Same Size)", 	index : [0,1,2,5,6,9,10,13,14,17,18,21,22,25,26,29,30,33,34,37,38,41,42,45,46] },
-	{ name : "HTTP2 (Same Size)", 		index : [0,3,4,7,8,11,12,15,16,19,20,23,24,27,28,31,32,35,36,39,40,43,44,47,48]	}
+    
+    { name : "1 MB - Nginx",        index : [0,1,2,19,20,37,38,55,56] },
+    { name : "1 MB - Apache",       index : [0,3,4,21,22,39,40,57,58] },
+    { name : "1 MB - Apache W/oSP", index : [0,5,6,23,24,41,42,59,60] },
+    { name : "2 MB - Nginx",	    index : [0,7,8,25,26,43,44,61,62] },
+    { name : "2 MB - Apache",       index : [0,9,10,27,28,45,46,63,64] },
+    { name : "2 MB - Apache W/oSP", index : [0,11,12,29,30,47,48,65,66] },
+    { name : "4 MB - Nginx",        index : [0,13,14,31,32,49,50,67,68] },
+    { name : "4 MB - Apache", 	    index : [0,15,16,33,34,51,52,69,70] },
+    { name : "4 MB - Apache W/oSP", index : [0,17,18,35,36,53,54,71,72] }
 ]
 
 var fs = require("fs");
@@ -72,11 +89,11 @@ module.exports = (connection, verbose) => {
     	// NEED to run
 		connection.query(
 	         `SELECT Website.WebsiteID, Size, Count, Structure, 
-             MAX(TotalTime), AVG(Send), AVG(Wait), AVG(Receive), ResponseHttpVersion
+             MAX(TotalTime), AVG(Send), AVG(Wait), AVG(Receive), ConnectionPath
              FROM Website INNER JOIN Entries ON Website.WebsiteID = Entries.WebsiteID  
-             WHERE (ResponseHttpVersion = "h2" OR ResponseHttpVersion = "http/1.1") AND (RequestUrl <> Entries.Domain)
-             GROUP BY WebsiteID, ResponseHttpVersion
-             ORDER BY Size, Structure, ResponseHttpVersion desc;`,
+             WHERE ResponseHttpVersion = "h2" AND (RequestUrl <> Entries.Domain) AND (Size = 4 OR Size = 6 OR Size = 8)
+             GROUP BY WebsiteID, ConnectionPath
+	     ORDER BY Size, Structure, ConnectionPath;`,
 	    (error, results, fields) => {
 		
 		if (error) {
@@ -93,7 +110,7 @@ module.exports = (connection, verbose) => {
 		    for (let j = 0; j < COUNT.length; j++) {
 			
 			COLUMNS[i].data.push({
-				    "num_of_entries" : 0,
+			    "num_of_entries" : 0,
 			    "TotalTime" : 0,
 			    "Send" : 0,
 			    "Wait" : 0,
@@ -105,7 +122,6 @@ module.exports = (connection, verbose) => {
 		if (verbose) { console.log("Column Data array initalized"); }
 		
 
-
 		// take queried data and add it to data
 		for (let i = 0; i < results.length; i++) {
 
@@ -113,7 +129,7 @@ module.exports = (connection, verbose) => {
 		    let Count = parseInt(results[i]["Count"]);
 		    let Size = parseInt(results[i]["Size"]);
 		    let Structure = results[i]["Structure"];
-		    let ResponseHttpVersion = results[i]["ResponseHttpVersion"];
+		    let ConnectionPath = parseInt(results[i]["ConnectionPath"]);
 		    
  		    // O(n3) ... ya I know, but honestly auto generated google charts wasn't gonna be O(n) was it now...
  		    // Assuming doing a ORDER BY in query allows for the best optimization from Branch Prediciton and caching
@@ -122,7 +138,7 @@ module.exports = (connection, verbose) => {
  			
  			if (Size == COLUMNS[j].Size &&
  			    Structure == COLUMNS[j].Structure &&
- 			    ResponseHttpVersion == COLUMNS[j].ResponseHttpVersion) {
+ 			    ConnectionPath == COLUMNS[j].ConnectionPath) {
 			    // hit condition when finds correct column matching DB data
 
 			    //TODO Get rid of dependent on Count index being from listed values and DB
@@ -190,10 +206,10 @@ module.exports = (connection, verbose) => {
 		    "pointSize: 5\n"+
 		    "};\n"+ // end of option object
 		    "view = new google.visualization.DataView(data);\n"+
-		    "chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n"+
+		    "chart = new google.visualization.AreaChart(document.getElementById('chart_div'));\n"+
 		    "chart.draw(view, options);\n"+
 		    "}\n"+ // end of drawChart()
-		    "google.charts.load('current', {packages: ['corechart', 'line']});\n"+
+		    "google.charts.load('current', {packages: ['corechart']});\n"+
 		    "google.charts.setOnLoadCallback(drawChart);\n"+
 		    // add change view function
 		    "function changeView(index) {\n"+
@@ -204,7 +220,7 @@ module.exports = (connection, verbose) => {
 		    "</html>";
 
 		// TODO check if directory exists and different relavent path
-		fs.writeFileSync('./charts/http1_vs_http2.html', HTML);
+		fs.writeFileSync('./charts/structures.html', HTML);
 		
 		return resolve(true);
 	    });
