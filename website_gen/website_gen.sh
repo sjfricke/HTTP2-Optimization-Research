@@ -117,7 +117,12 @@ if [ -a $COUNT_FP ]
                 echo 0 > $COUNT_FP
 fi
 
-WEB_FP=$MAIN_WEB_FP"html/"$WEB_NAME
+## adds slash to website file path if not given
+if [ "${MAIN_WEB_FP: -1}" == "/" ] ; then
+	WEB_FP=$MAIN_WEB_FP""$WEB_NAME
+else
+	WEB_FP=$MAIN_WEB_FP"/"$WEB_NAME
+fi
 
 mkdir -p $WEB_FP
 INDEX_FP=$WEB_FP"/index.html"
