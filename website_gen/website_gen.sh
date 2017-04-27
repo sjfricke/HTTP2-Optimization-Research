@@ -47,21 +47,6 @@ print_help() {
         return 0
 }
 
-purge() {
-        read -r -p "Are you sure you want to delete all sites in: $MAIN_WEB_FP? [YES/N] " response
-        if [[ "$response" =~ ^([Y][E][S]+$ ]]
-        then
-                ls -1 -d $MAIN_WEB_FP*/  | grep "$MAIN_WEB_FP[^(css)|(js)|(images)]" | sudo xargs rm -R #deletes all directories not for report
-                rm $COUNT_FP
-                rm $WEB_LIST_FP
-        else
-                echo "If you wanted to purge $MAIN_WEB_FP you have to type YES"
-                echo "If you want to purge a diffrent directory run ./website_gen -purge 0 0 0 0 0 0 /dir/you/want/to/purge/"
-                echo "If thats a pain, just do it yourself"
-        fi
-        return 0
-}
-
 ###Constants
 if [ -z "$8" ] ; then
         MAIN_WEB_FP="/var/www/html/"
@@ -76,6 +61,21 @@ else
 fi
 WEB_LIST_FP=$MAIN_WEB_FP"web_list"
 HTML_DOCTYPE="<!DOCTYPE html>"
+
+purge() {
+        read -r -p "Are you sure you want to delete all sites in: $MAIN_WEB_FP? [YES/N] " response
+	if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
+        then
+                ls -1 -d $MAIN_WEB_FP*/  | grep "$MAIN_WEB_FP[^(css)|(js)|(images)]" | sudo xargs rm -R #deletes all directories not for report
+                rm $COUNT_FP
+                rm $WEB_LIST_FP
+        else
+                echo "If you wanted to purge $MAIN_WEB_FP you have to type YES"
+                echo "If you want to purge a diffrent directory run ./website_gen -purge 0 0 0 0 0 0 /dir/you/want/to/purge/"
+                echo "If thats a pain, just do it yourself"
+        fi
+        return 0
+}
 
 ###Error Checking
 if [[ $# -eq 0 ]] ; then
