@@ -10,13 +10,13 @@
 #                 STRUCTURE
 
 ### READ FROM CONFIG FILE
-DOMAIN=$(grep DOMAIN web_config | awk '{print $2}')
-WEB_DIR=$(grep HOST_DIR web_config | awk '{print $2}')
-COUNT_FP=$(grep COUNT_FP web_config | awk '{print $2}')
+DOMAIN=$(grep ^[^#][DOMAIN] web_config | awk '{print $2}')
+WEB_DIR=$(grep ^[^#][HOST_DIR] web_config | awk '{print $2}')
+COUNT_FP=$(grep ^[^#][COUNT_FP] web_config | awk '{print $2}')
 
 ### PARSE CONFIG VARIBLE
 # OBJECT TYPE
-HOLD=$(grep OBJECT_TYPE web_config | awk '{print $2}')
+HOLD=$(grep ^[^#][OBJECT_TYPE] web_config | awk '{print $2}')
 if [[ $HOLD == *"W"* ]]; then
         JS_BOOL=1
 else
@@ -39,19 +39,19 @@ else
 fi
 
 # SIZE ARRAY
-HOLD=$(grep OBJECT_SIZES web_config | sed 's/.*SIZES //')
+HOLD=$(grep ^[^#][OBJECT_SIZES] web_config | sed 's/.*SIZES //')
 unset SIZES
 unset IFS
 IFS=' ' read -r -a SIZES <<< "$HOLD"
 
 # COUNT/OBJECTS ARRAY
-HOLD=$(grep OBJECT_COUNTS web_config | sed 's/.*COUNTS //')
+HOLD=$(grep ^[^#][OBJECT_COUNTS] web_config | sed 's/.*COUNTS //')
 unset OBJECTS
 unset IFS
 IFS=' ' read -r -a OBJECTS <<< "$HOLD"
 
 # STRUCTURE TYPE
-HOLD=$(grep OBJECT_STRUCTURE web_config | awk '{print $2}')
+HOLD=$(grep ^[^#][OBJECT_STRUCTURE] web_config | awk '{print $2}')
 if [[ $HOLD == *"A"* ]]; then
         SS_BOOL=1
 else
