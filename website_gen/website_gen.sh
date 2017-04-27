@@ -119,7 +119,7 @@ fi
 
 WEB_FP=$MAIN_WEB_FP"html/"$WEB_NAME
 
-mkdir $WEB_FP
+mkdir -p $WEB_FP
 INDEX_FP=$WEB_FP"/index.html"
 OBJECT_FP=$WEB_FP"/object"
 
