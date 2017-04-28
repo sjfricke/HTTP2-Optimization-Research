@@ -13,6 +13,7 @@ Globals
 ********************************************/
 const COMPUTER_TYPE = 1; //TODO 0 == H2, 1 == http1
 const CONNECTION_PATH = 0; // 0 || 1 == nginx, 2 == apache W/SP, 3 == apache Wo/SP
+const EXTRA_CONFIG = 2; // 1 = ethernet, 2  = Wifi
 
 var DB_NAME, DB_HOST, DB_USER, DB_PASS; // used to log into database
 var INPUT_FILE; // where to grab the websites
@@ -170,12 +171,13 @@ function parse_loop() {
 
 
 	// gets website obj data and parses it out for use in query insert
-	var website_obj = WEBSITE_LIST[PARSE_LOOP_COUNT].substr(WEBSITE_LIST[PARSE_LOOP_COUNT].lastIndexOf("/")+1) // returns ex: W_1_2_a
+	// assumes the url contains name of html file at end WITHOUT .html
+	var temp = WEBSITE_LIST[PARSE_LOOP_COUNT].substring(0, WEBSITE_LIST[PARSE_LOOP_COUNT].length - 1); //prevents if site ends with '/'
+	var website_obj = temp.substring(temp.lastIndexOf("/")+1) // gets just the last part of path returns ex: W_1_2_a
 	var obj_type = website_obj.split("_")[0];
 	var obj_size  = website_obj.split("_")[1];
 	var obj_count = website_obj.split("_")[2];
-	var obj_structure = website_obj.split("_")[3];
-
+	var obj_structure = website_obj.split("_")[3]; // TODO: add check for .html on url
 	var domain = har.log.pages[0].title; // keep variable as we use is multiple times below
 	var WebsiteID; // gets called from website_query and used as foreign key for entry insert query
 
@@ -223,7 +225,7 @@ function parse_loop() {
 					 'RequestUrl = ?, RequestHeadersSize = ?, RequestBodySize = ?, ResponseDate = ?, ResponseLastModified = ?, '+
 					 'ResponseServer = ?, ResponseContentLength = ?, ResponseStatus = ?, ResponseHeadersSize = ?, ResponseBodySize = ?, '+
 				         'ResponseHttpVersion = ?, ResponseTransferSize = ?, Blocked = ?, DNS = ?, Connect = ?, Send = ?, Wait = ?, '+
-					 'Receive = ?, SSLTime = ?, ComputerType = ?, ConnectionPath = ?',
+					 'Receive = ?, SSLTime = ?, ComputerType = ?, ConnectionPath = ?, ExtraConfig = ?',
 					 [
 					     WebsiteId, // WebsiteId
 					     domain, // Domain
@@ -256,7 +258,8 @@ function parse_loop() {
 					     entry.timings.ssl, // SSLTime
 
 					     COMPUTER_TYPE, // ComputerType
-					     CONNECTION_PATH // ConnectionPath
+					     CONNECTION_PATH, // ConnectionPath
+					     EXTRA_CONFIG // ExtraConfig
 					 ],
 			    function(error, results) {
 				// call with each query
@@ -284,8 +287,8 @@ function parse_loop() {
 
 			console.log("Parse loop ", PARSE_LOOP_COUNT, "of ", WEBSITE_LIST.length-1, " complete"); // only non-verbose printout
 			PARSE_LOOP_COUNT++;
-			parse_loop(); // recursion call
-			// setTimeout(function(){ parse_loop(); }, 500); TODO, used on slow computers
+//			parse_loop(); // recursion call
+			setTimeout(function(){ parse_loop(); }, 300); //TODO, used on slow computers
 	     }); // forEachOfSeries
 
 	}); // website_query
