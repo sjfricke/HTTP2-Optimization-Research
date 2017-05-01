@@ -112,7 +112,9 @@ async function main_loop() {
     try {
 	let query_result;
 
-	//query_result = await require("./queries/outlier_finder.js")(connection, VERBOSE);
+	// query_result = await require("./queries/outlier_finder.js")(connection, VERBOSE);
+
+     // query_result = await require("./queries/wire_wireless.js")(connection, VERBOSE);
 
 //    query_result = await require("./queries/http1_vs_http2.js")(connection, VERBOSE);
 //    if (VERBOSE) { console.log("http1_vs_http2 done!\n"); }
@@ -120,8 +122,8 @@ async function main_loop() {
 //    query_result = await require("./queries/structures.js")(connection, VERBOSE);
 //    if (VERBOSE) { console.log("structures done!\n"); }
 
-    query_result = await require("./queries/web_servers.js")(connection, VERBOSE);
-    if (VERBOSE) { console.log("web_servers done!\n"); }
+     query_result = await require("./queries/web_servers.js")(connection, VERBOSE);
+    // if (VERBOSE) { console.log("web_servers done!\n"); }
 
 	
     } catch (error) {

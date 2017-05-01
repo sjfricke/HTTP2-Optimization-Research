@@ -1,43 +1,25 @@
+// EXTRA_CONFIG = 1; // 1 = ethernet, 2  = Wifi
+
 // WE ASSUMING CURRENTLY THAT EVERY COUNT IS HERE AS WE ARE USING INDEX MATCHING - TOTALLY A //TODO
 const COUNT = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "15", "20", "25", "30", "35", "50", "70", "90", "100", "125", "150", "175", "200"];
 // Each column has a index after saved for tooltips
 const COLUMNS = [
-	{ name : "1 MB Same Size - Nginx",	 Size : 4, ConnectionPath : 1, Structure : "a", data : [] }, // 1
-	{ name : "1 MB Same Size - Apache",  Size : 4, ConnectionPath : 2, Structure : "a", data : [] }, // 3
-	{ name : "2 MB Same Size - Nginx",	 Size : 6, ConnectionPath : 1, Structure : "a", data : [] }, // 5
-	{ name : "2 MB Same Size - Apache",  Size : 6, ConnectionPath : 2, Structure : "a", data : [] }, // 7
-	{ name : "4 MB Same Size - Nginx",   Size : 8, ConnectionPath : 1, Structure : "a", data : [] }, // 9
-	{ name : "4 MB Same Size - Apache",  Size : 8, ConnectionPath : 2, Structure : "a", data : [] }, // 11
- 	{ name : "1 MB Ascending - Nginx",	 Size : 4, ConnectionPath : 1, Structure : "b", data : [] }, // 13
-	{ name : "1 MB Ascending - Apache",  Size : 4, ConnectionPath : 2, Structure : "b", data : [] }, // 15
-	{ name : "2 MB Ascending - Nginx",	 Size : 6, ConnectionPath : 1, Structure : "b", data : [] }, // 17
-	{ name : "2 MB Ascending - Apache",  Size : 6, ConnectionPath : 2, Structure : "b", data : [] }, // 19
-	{ name : "4 MB Ascending - Nginx",   Size : 8, ConnectionPath : 1, Structure : "b", data : [] }, // 21
-	{ name : "4 MB Ascending - Apache",  Size : 8, ConnectionPath : 2, Structure : "b", data : [] }, // 23
-	{ name : "1 MB Descending - Nginx",  Size : 4, ConnectionPath : 1, Structure : "c", data : [] }, // 25
-	{ name : "1 MB Descending - Apache", Size : 4, ConnectionPath : 2, Structure : "c", data : [] }, // 27
-	{ name : "2 MB Descending - Nginx",	 Size : 6, ConnectionPath : 1, Structure : "c", data : [] }, // 29
-	{ name : "2 MB Descending - Apache", Size : 6, ConnectionPath : 2, Structure : "c", data : [] }, // 31
-	{ name : "4 MB Descending - Nginx",  Size : 8, ConnectionPath : 1, Structure : "c", data : [] }, // 33
-    { name : "4 MB Descending - Apache", Size : 8, ConnectionPath : 2, Structure : "c", data : [] }, // 35
-	{ name : "1 MB Random - Nginx",	 	 Size : 4, ConnectionPath : 1, Structure : "d", data : [] }, // 37
-	{ name : "1 MB Random - Apache",  	 Size : 4, ConnectionPath : 2, Structure : "d", data : [] }, // 39
-	{ name : "2 MB Random - Nginx",	 	 Size : 6, ConnectionPath : 1, Structure : "d", data : [] }, // 41
-	{ name : "2 MB Random - Apache",   	 Size : 6, ConnectionPath : 2, Structure : "d", data : [] }, // 43
-	{ name : "4 MB Random - Nginx",  	 Size : 8, ConnectionPath : 1, Structure : "d", data : [] }, // 45
-	{ name : "4 MB Random - Apache", 	 Size : 8, ConnectionPath : 2, Structure : "d", data : [] }  // 47
+	{ name : "1 MB - Wired",		Size : 4, ExtraConfig : 1, Structure : "a", data : [] }, // 1
+	{ name : "1 MB - Wireless",  	Size : 4, ExtraConfig : 2, Structure : "a", data : [] }, // 3
+	{ name : "2 MB - Wired",		Size : 6, ExtraConfig : 1, Structure : "a", data : [] }, // 5
+	{ name : "2 MB - Wireless",  	Size : 6, ExtraConfig : 2, Structure : "a", data : [] }, // 7
+	{ name : "4 MB - Wired",  		Size : 8, ExtraConfig : 1, Structure : "a", data : [] }, // 9
+	{ name : "4 MB - Wireless", 	Size : 8, ExtraConfig : 2, Structure : "a", data : [] } // 11
+
 ];
 // all groups need zero index for the X column
 const GROUPS = [
-    { name : "1 MB",   		index : [0,1,2,3,4,13,14,15,16,25,26,27,28,37,38,39,40] },
-    { name : "2 MB",  	 	index : [0,5,6,7,8,17,18,19,20,29,30,31,32,41,42,43,44] },
-    { name : "4 MB",  		index : [0,9,10,11,12,21,22,23,24,33,34,35,36,45,46,47,48] },
-    { name : "Same Size",   index : [0,1,2,3,4,5,6,7,8,9,10,11,12] },
-    { name : "Ascending",   index : [0,13,14,15,16,17,18,19,20,21,22,23,24] },
-    { name : "Descending",  index : [0,25,26,27,28,29,30,31,32,33,34,35,36] },
-    { name : "Random",	   	index : [0,37,38,39,40,41,42,43,44,45,46,47,48] },
-    { name : "Nginx",   	index : [0,1,2,5,6,9,10,13,14,17,18,21,22,25,26,29,30,33,34,37,38,41,42,45,46] },
-    { name : "Apache",   	index : [0,3,4,7,8,11,12,15,16,19,20,23,24,27,28,31,32,35,36,39,40,43,44,47,48] }
+    { name : "1 MB",     index : [0,1,2,3,4] },
+    { name : "2 MB",     index : [0,5,6,7,8] },
+    { name : "4 MB",	 index : [0,9,10,11,12] },
+    { name : "Ethernet", index : [0,1,2,5,6,9,10] },
+    { name : "Wireless", index : [0,3,4,7,8,11,12] },
+    { name : "All", 	 index : [0,1,2,3,4,5,6,7,8,9,10,11,12] }
 ]
 
 var fs = require("fs");
@@ -75,11 +57,11 @@ module.exports = (connection, verbose) => {
     	// NEED to run
 		connection.query(
 	         `SELECT Website.WebsiteID, Size, Count, Structure,
-             MAX(TotalTime), AVG(Send), AVG(Wait), AVG(Receive), ConnectionPath
+             MAX(TotalTime), AVG(Send), AVG(Wait), AVG(Receive), ExtraConfig
              FROM Website INNER JOIN Entries ON Website.WebsiteID = Entries.WebsiteID  
-             WHERE ResponseHttpVersion = "h2" AND (RequestUrl <> Entries.Domain) AND (Size = 4 OR Size = 6 OR Size = 8)
-             GROUP BY WebsiteID, ConnectionPath
-	     ORDER BY Size, Structure, ConnectionPath;`,
+             WHERE ResponseHttpVersion = "h2" AND (RequestUrl <> Entries.Domain) AND (Size = 4 OR Size = 6 OR Size = 8) AND Structure = "a"
+             GROUP BY WebsiteID, ExtraConfig
+	     ORDER BY Size, Count, Structure, ExtraConfig;`,
 	    (error, results, fields) => {
 
 		if (error) {
@@ -114,8 +96,8 @@ module.exports = (connection, verbose) => {
 		    let Count = parseInt(results[i]["Count"]);
 		    let Size = parseInt(results[i]["Size"]);
 		    let Structure = results[i]["Structure"];
-		    let ConnectionPath = parseInt(results[i]["ConnectionPath"]);
-		    
+		    let ExtraConfig = parseInt(results[i]["ExtraConfig"]);
+
  		    // O(n3) ... ya I know, but honestly auto generated google charts wasn't gonna be O(n) was it now...
  		    // Assuming doing a ORDER BY in query allows for the best optimization from Branch Prediciton and caching
 
@@ -123,7 +105,7 @@ module.exports = (connection, verbose) => {
  			
  			if (Size == COLUMNS[j].Size &&
  			    Structure == COLUMNS[j].Structure &&
- 			    ConnectionPath == COLUMNS[j].ConnectionPath) {
+ 			    ExtraConfig == COLUMNS[j].ExtraConfig) {
 			    // hit condition when finds correct column matching DB data
 
 			    //TODO Get rid of dependent on Count index being from listed values and DB
@@ -182,7 +164,7 @@ module.exports = (connection, verbose) => {
 
 		// TODO give more colors choices
 		HTML += "options = {\n"+
-		    "title:'Load Time Over Different Web Servers',\n"+
+		    "title:'Load time over different structures',\n"+
 		    "hAxis:{title:'Files in Page'},\n"+
 		    "vAxis:{title:'Time (milliseconds)'},\n"+
 		    "colors:['Red','Green','Navy','Purple','DarkOrange','Black','Cyan','SteelBlue','Gold','SpringGreen'],\n"+
@@ -199,14 +181,14 @@ module.exports = (connection, verbose) => {
 		    // add change view function
 		    "function changeView(index, name) {\n"+
 		    "view.setColumns( index );\n"+
-		    "options.title = 'Load Time Over Different Web Servers with ' + name + ' sites';\n"+
+		    "options.title = 'Load Time Over Different Structures with ' + name + ' sites';\n"+
 		    "chart.draw(view, options);\n"+
 		    "}\n"+
 		    "</script>"+		    
 		    "</html>";
 
 		// TODO check if directory exists and different relavent path
-		fs.writeFileSync('./charts/web_servers.html', HTML);
+		fs.writeFileSync('./charts/wire_wireless.html', HTML);
 		
 		return resolve(true);
 	    });
