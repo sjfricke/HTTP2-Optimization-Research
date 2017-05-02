@@ -54,11 +54,6 @@ else
         MAIN_WEB_FP=$8
 fi
 
-if [ -z "$9" ] ; then
-        COUNT_FP=$MAIN_WEB_FP".web_count"
-else
-        COUNT_FP=$9
-fi
 WEB_LIST_FP=$MAIN_WEB_FP"web_list"
 HTML_DOCTYPE="<!DOCTYPE html>"
 
@@ -105,17 +100,6 @@ OBJ_MIN_SIZE=$4
 WEB_MAX_SIZE=$5
 BS=$6
 WEB_NAME=$7
-
-### directory gen
-if [ -a $COUNT_FP ]
-        then
-                WEB_NUM="$(cat $COUNT_FP)"
-                let "WEB_NUM++"
-                echo $WEB_NUM > $COUNT_FP
-        else
-                WEB_NUM=0
-                echo 0 > $COUNT_FP
-fi
 
 ## adds slash to website file path if not given
 if [ "${MAIN_WEB_FP: -1}" == "/" ] ; then

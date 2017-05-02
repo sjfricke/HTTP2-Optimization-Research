@@ -1,4 +1,6 @@
+##################################
 ### Website_Gen Configurations ###
+##################################
 
 # Domain of website aiming at
 DOMAIN http://www.example.com
@@ -6,15 +8,12 @@ DOMAIN http://www.example.com
 # Host directory is used to aim where all the websites will be created
 HOST_DIR /var/www/html/
 
-# Count file pointers give a location where a count of websites is held
-# Changing location will reset count and one should purge before changing
-COUNT_FP /var/www/.web_count
-
 # Web list file point is used to set where the output of websites created is put
 # Changing location will have the list create from scratch so one should purge before changing
 
-
+####################################
 ### Script_Script Configurations ###
+####################################
 
 # List letters of object types wanting to use
 # Each letter added is included when generating websites
