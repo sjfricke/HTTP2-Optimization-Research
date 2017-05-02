@@ -3,7 +3,7 @@ This is a simple bash script to generate a fake website
 
 > NOTE: If you get permission errors run with sudo
 
-## [config](./confige)
+## [config](./config)
 * A list of various settings to adjust the scripts
 * Make sure to adjust before calling script
 
@@ -11,7 +11,7 @@ This is a simple bash script to generate a fake website
 * This calls `website_gen.sh` multiple time with a set of parameters from `config`
 * `website_gen.sh` does all the generating while this just lets you easily create your permutations of sites
 
-## website_gen.sh
+## [website_gen.sh](./website_gen.sh)
 This creates a website by the parameters you pass it
 * Usage (all intputs are ints except for alternate options)
   * `./website_gen.sh <AlternateOption/NumberofObjects> <ObjectStructure> <ObjectType> <MinSizeObject> <TotalWebsiteSize> <BS> <WebsiteName>`
@@ -28,7 +28,7 @@ This creates a website by the parameters you pass it
 	* `2` Descedning Size
 	* `3` Random Placement
 * **ObjectType** 
-  *What type of objects to use
+  * What type of objects to use
 	* `0` All js
 	* `1` All css
 	* `2` All img
