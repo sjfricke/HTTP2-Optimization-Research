@@ -1,6 +1,43 @@
 #! /bin/bash
 ### functions
 
+##################
+### CONSTANTS ####
+##################
+
+# Get config file values
+DOMAIN=$(grep -E '(^DOMAIN)' config | awk '{print $2}')
+## Checks if domain is found, else quits
+if [ -z "$DOMAIN" ] ; then
+    echo "Please set a value to DOMAIN in the config file"
+    exit 0
+fi
+
+## adds slash to domain if not given
+if [ "${DOMAIN: -1}" != "/" ] ; then
+	DOMAIN=$DOMAIN"/"
+fi
+
+MAIN_WEB_FP=$(grep -E '(^HOST_DIR)' config | awk '{print $2}')
+## Gives default if directory isn't set
+if [ -z "$MAIN_WEB_FP" ] ; then
+    MAIN_WEB_FP="/var/www/html/"
+fi
+
+## adds slash to file path if not given
+if [ "${MAIN_WEB_FP: -1}" != "/" ] ; then
+	MAIN_WEB_FP=$MAIN_WEB_FP"/"
+fi
+
+## Web list used to hold websites generated
+WEB_LIST_FP=$MAIN_WEB_FP"web_list"
+
+HTML_DOCTYPE="<!DOCTYPE html>"
+
+#################
+### FUNCTIONS ###
+#################
+
 print_help() {
         echo -e "
         ----------------------------------------------------------------------------
@@ -9,7 +46,7 @@ print_help() {
 
         \e[93m# Alternate Options\e[0m
         \e[92m## -help prints this page
-        \e[91m## -purge deletes all websites from /var/www/html and sets web counter to 0
+        \e[91m## -purge deletes all websites from $MAIN_WEB_FP and sets web counter to 0
 
         \e[33m# NumberofObjects - how many objects in a webpage\e[0m
 
@@ -47,34 +84,11 @@ print_help() {
         return 0
 }
 
-##################
-### CONSTANTS ####
-##################
-
-# Get config file values
-DOMAIN=$(grep -E '(^DOMAIN)' config | awk '{print $2}')
-## adds slash to domain if not given
-if [ "${DOMAIN: -1}" != "/" ] ; then
-	DOMAIN=$DOMAIN"/"
-fi
-
-MAIN_WEB_FP=$(grep -E '(^HOST_DIR)' config | awk '{print $2}')
-## adds slash to file path if not given
-if [ "${MAIN_WEB_FP: -1}" != "/" ] ; then
-	MAIN_WEB_FP=$MAIN_WEB_FP"/"
-fi
-
-## Web list used to hold websites generated
-WEB_LIST_FP=$MAIN_WEB_FP"web_list"
-
-HTML_DOCTYPE="<!DOCTYPE html>"
-
 purge() {
-        read -r -p "Are you sure you want to delete all sites in: $MAIN_WEB_FP? [YES/N] " response
+        read -r -p "Are you sure you want to delete all sites in: $MAIN_WEB_FP? [yes/N] " response
 	if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
         then
                 ls -1 -d $MAIN_WEB_FP*/  | grep "$MAIN_WEB_FP[^(css)|(js)|(images)]" | sudo xargs rm -R #deletes all directories not for report
-                rm $COUNT_FP
                 rm $WEB_LIST_FP
         else
                 echo "If you wanted to purge $MAIN_WEB_FP you have to type YES"
@@ -203,5 +217,3 @@ chmod 644 -R $WEB_FP
 chmod 755 $WEB_FP
 
 echo $WEB_NAME" DONE"
-
-
