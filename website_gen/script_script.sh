@@ -1,22 +1,25 @@
 #! /bin/bash
 
-### Naming Convention
-# (WXYZ)_(  )_(  )_(ABCD)
-#   |     ||   ||   ||||
-# OBJECT  ||   ||   ||||
-# TYPE    ||   ||   ||||
-#        SIZE  ||   ||||
-#             COUNT ||||
-#                 STRUCTURE
+#############################
+### Naming Convention #######
+#############################
+#                           #
+# (WXYZ)_(  )_(  )_(ABCD)   #
+#   |     ||   ||   ||||    #
+# OBJECT  ||   ||   ||||    #
+# TYPE    ||   ||   ||||    #
+#        SIZE  ||   ||||    #
+#             COUNT ||||    #
+#                 STRUCTURE #
+#                           #
+#############################
 
-### READ FROM CONFIG FILE
-DOMAIN=$(grep -E '(^DOMAIN)' web_config | awk '{print $2}')
-WEB_DIR=$(grep -E '(^HOST_DIR)' web_config | awk '{print $2}')
-COUNT_FP=$(grep -E '(^COUNT_FP)' web_config | awk '{print $2}')
+#############################
+### READ FROM CONFIG FILE ###
+#############################
 
-### PARSE CONFIG VARIBLE
 # OBJECT TYPE
-HOLD=$(grep -E '(^OBJECT_TYPE)' web_config | awk '{print $2}')
+HOLD=$(grep -E '(^OBJECT_TYPE)' config | awk '{print $2}')
 if [[ $HOLD == *"W"* ]]; then
         JS_BOOL=1
 else
@@ -39,19 +42,19 @@ else
 fi
 
 # SIZE ARRAY
-HOLD=$(grep -E '(^OBJECT_SIZES)' web_config | sed 's/.*SIZES //')
+HOLD=$(grep -E '(^OBJECT_SIZES)' config | sed 's/.*SIZES //')
 unset SIZES
 unset IFS
 IFS=' ' read -r -a SIZES <<< "$HOLD"
 
 # COUNT/OBJECTS ARRAY
-HOLD=$(grep -E '(^OBJECT_COUNTS)' web_config | sed 's/.*COUNTS //')
+HOLD=$(grep -E '(^OBJECT_COUNTS)' config | sed 's/.*COUNTS //')
 unset OBJECTS
 unset IFS
 IFS=' ' read -r -a OBJECTS <<< "$HOLD"
 
 # STRUCTURE TYPE
-HOLD=$(grep -E '(^OBJECT_STRUCTURE)' web_config | awk '{print $2}')
+HOLD=$(grep -E '(^OBJECT_STRUCTURE)' config | awk '{print $2}')
 if [[ $HOLD == *"A"* ]]; then
         SS_BOOL=1
 else
@@ -78,14 +81,6 @@ JS="W"
 CSS="X"
 IMG="Y"
 RND="Z"
-
-### SIZES (in bytes)
-#unset SIZES
-#SIZES=(100000 250000 500000 750000 1000000 1500000 2000000 2500000 4000000 6000000 8000000)
-
-### OBJECT COUNTS
-#unset OBJECTS
-#OBJECTS=(1 2 3 4 5 6 7 8 9 10 15 20 25 30 35 50 70 90 100 125 150 175 200)
 
 ### OBJECT STRUCTURE
 SS="A" #All same size
@@ -121,7 +116,7 @@ do
                 WEBS0=$IMG
         ;;
         3)
-                OBJECT_TYPE=4
+                OBJECT_TYPE=3
                 WEBS0=$RND
         ;;
         esac
@@ -173,8 +168,8 @@ do
                                         ([ "$OBJECT_STRUCTURE" == "3" ] && [ "$RNDS_BOOL" == "0" ]); then
                                         echo "hello darkness my old friend" > /dev/null
                                 else
-                                        ./website_gen.sh $COUNT $OBJECT_STRUCTURE $OBJECT_TYPE 0 $SIZE $BS $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3 $WEB_DIR $COUNT_FP
-                                        #echo $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3"|||"$WEB_DIR"|||"$COUNT_FP
+                                        ./website_gen.sh $COUNT $OBJECT_STRUCTURE $OBJECT_TYPE 0 $SIZE $BS $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3
+					#echo $WEBS0"_"$WEBS1"_"$WEBS2"_"$WEBS3
                                 fi
 
                         done # /OBJECT STRUCTURE
@@ -182,41 +177,5 @@ do
         done # /SIZE
 done # /TYPE
 
-#
-# Used print out size of result constants
-#
-echo -n "const SIZE = ["
-for i in ${SIZES[@]};
-do
-
-        if [[ "$i" -lt "999999" ]]
-        then
-                BASE=1000
-                UNITS="KB"
-        else
-                BASE=1000000
-                UNITS="MB"
-        fi
-
-        VALUE=$(python -c "print float($i) / float($BASE)" | sed -e 's/\.0//g')
-
-        if [ "$i" != "${SIZES[-1]}" ]
-        then
-                echo -n '"'$VALUE $UNITS'"'," "
-        else
-                echo '"'$VALUE $UNITS'"'"];"
-        fi
-done
-
-echo -n "const COUNT = ["
-for i in ${OBJECTS[@]};
-do
-        if [ "$i" != "${OBJECTS[-1]}" ]
-        then
-                echo -n '"'$i'"'," "
-        else
-                echo '"'$i'"'"];"
-        fi
-done
 
 

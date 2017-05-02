@@ -47,14 +47,26 @@ print_help() {
         return 0
 }
 
-###Constants
-if [ -z "$8" ] ; then
-        MAIN_WEB_FP="/var/www/html/"
-else
-        MAIN_WEB_FP=$8
+##################
+### CONSTANTS ####
+##################
+
+# Get config file values
+DOMAIN=$(grep -E '(^DOMAIN)' config | awk '{print $2}')
+## adds slash to domain if not given
+if [ "${DOMAIN: -1}" != "/" ] ; then
+	DOMAIN=$DOMAIN"/"
 fi
 
+MAIN_WEB_FP=$(grep -E '(^HOST_DIR)' config | awk '{print $2}')
+## adds slash to file path if not given
+if [ "${MAIN_WEB_FP: -1}" != "/" ] ; then
+	MAIN_WEB_FP=$MAIN_WEB_FP"/"
+fi
+
+## Web list used to hold websites generated
 WEB_LIST_FP=$MAIN_WEB_FP"web_list"
+
 HTML_DOCTYPE="<!DOCTYPE html>"
 
 purge() {
@@ -72,13 +84,13 @@ purge() {
         return 0
 }
 
-###Error Checking
+### Error Checking ###
 if [[ $# -eq 0 ]] ; then
     print_help ""
     exit 0
 fi
 
-###Prelim options
+### Prelim options ###
 OPTION=$1
 
 case "$OPTION" in
@@ -101,25 +113,21 @@ WEB_MAX_SIZE=$5
 BS=$6
 WEB_NAME=$7
 
-## adds slash to website file path if not given
-if [ "${MAIN_WEB_FP: -1}" == "/" ] ; then
-	WEB_FP=$MAIN_WEB_FP""$WEB_NAME
-else
-	WEB_FP=$MAIN_WEB_FP"/"$WEB_NAME
-fi
+# Creates folder name
+WEB_FP=$MAIN_WEB_FP""$WEB_NAME
 
 mkdir -p $WEB_FP
 INDEX_FP=$WEB_FP"/index.html"
 OBJECT_FP=$WEB_FP"/object"
 
 ### web list addition
-echo "https://http2optimization.com/"$WEB_NAME"/" >> $WEB_LIST_FP
+echo $DOMAIN""$WEB_NAME"/" >> $WEB_LIST_FP
 
 ### html gen start
 echo $HTML_DOCTYPE > $INDEX_FP
 echo "<html>" >> $INDEX_FP
 echo "<header>$WEB_NAME</header>" >> $INDEX_FP
-echo "<body><h1>CHUCK RULES</h1>" >> $INDEX_FP
+echo "<body><h1><a href="https://http2optimization.com">HTTP/2 Optimization</a></h1>" >> $INDEX_FP
 
 #clears list for random tracking
 unset LIST
@@ -172,7 +180,7 @@ do
                 dd if=/dev/urandom of=$OBJECT_FP$i$FT bs=$BS count=$(( ( (WEB_MAX_SIZE*2/(OBJ_COUNT*(OBJ_COUNT + 1)) )*(OBJ_COUNT - (i - 1) ))  /BS )) >& /dev/null
         ;;
         3)#Random
-                RAND=$( python -c "import random; print random.randrange(1, $(( OBJ_COUNT + 1 )) );" )
+	        RAND=$((1 + RANDOM % OBJ_COUNT ))
                 while [ $(( LIST[RAND] )) == 1 ]; do
                         if (( RAND >= OBJ_COUNT ));
                         then
