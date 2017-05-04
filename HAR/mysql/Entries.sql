@@ -26,8 +26,7 @@ CREATE TABLE `har_db`.`Entries` (
   `Wait` FLOAT NOT NULL,
   `Receive` FLOAT NOT NULL,
   `SSLTime` FLOAT NOT NULL,
-  `ComputerType` INT(11) NULL DEFAULT NULL,
-  `ConnectionPath` INT(11) NULL DEFAULT NULL,
+  `ExtraConfig` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`EntryID`),
   INDEX `WebsiteID_idx` (`WebsiteID` ASC),
   CONSTRAINT `WebsiteID`
