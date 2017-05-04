@@ -1,4 +1,4 @@
-CREATE TABLE `har_db`.`Website` (
+CREATE TABLE `DATABASE_NAME_HERE`.`Website` (
   `WebsiteID` INT NOT NULL AUTO_INCREMENT,
   `Domain` VARCHAR(100) NOT NULL,
   `NumberOfFiles` INT NOT NULL,
