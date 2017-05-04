@@ -1,4 +1,4 @@
-CREATE TABLE `har_db`.`Entries` (
+CREATE TABLE `DATABASE_NAME_HERE`.`Entries` (
   `EntryID` INT(11) NOT NULL AUTO_INCREMENT,
   `WebsiteID` INT NOT NULL,
   `Domain` VARCHAR(512) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `har_db`.`Entries` (
   INDEX `WebsiteID_idx` (`WebsiteID` ASC),
   CONSTRAINT `WebsiteID`
     FOREIGN KEY (`WebsiteID`)
-    REFERENCES `har_db`.`Website` (`WebsiteID`)
+    REFERENCES `DATABASE_NAME_HERE`.`Website` (`WebsiteID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
