@@ -31,43 +31,14 @@ To setup your own MySQL tables for the HAR parser
 	* `Z` - Random file
   * This field can be just one or any permutation of the letters.
 * `Size` **[VARCHAR(8)]** [NOT NULL]
-  * Number of bytes of each page
-	* `0` - 100000 bytes *(~100 KB)*
-	* `1` - 250000 bytes *(~250 KB)*
-	* `2` - 500000 bytes *(~500 KB)*
-	* `3` - 750000 bytes *(~750 KB)*
-	* `4` - 1000000 bytes *(~1 MB)*
-	* `5` - 1500000 bytes *(~1.5 MB)*
-	* `6` - 2000000 bytes *(~2 MB)*
-	* `7` - 2500000 bytes *(~2.5 MB)*
-	* `8` - 4000000 bytes *(~4 MB)*
-	* `9` - 6000000 bytes *(~6 MB)*
-	* `10` - 8000000 bytes *(~8 MB)*
+  * Number of bytes of each page in bytes
+  * Examples:
+  	* 1024 == *1 KB*
+	* 100000 == *~100 KB*
+	* 1000000 == *~1 MB*
+	* 5000000 == *~5 MB*
 * `Count` **[VARCHAR(8)]** [NOT NULL]
   * The total number of object files that make up the `Size`.
-	* `0` - 1 file
-	* `1` - 2 files
-	* `2` - 3 files
-	* `3` - 4 files
-	* `4` - 5 files
-	* `5` - 6 files
-	* `6` - 7 files
-	* `7` - 8 files
-	* `8` - 9 files
-	* `9` - 10 files
-	* `10` - 15 files
-	* `11` - 20 files
-	* `12` - 25 files
-	* `13` - 30 files
-	* `14` - 35 files
-	* `15` - 50 files
-	* `16` - 70 files
-	* `17` - 90 files
-	* `18` - 100 files
-	* `19` - 125 files
-	* `20` - 150 files
-	* `21` - 175 files
-	* `22` - 200 files	
 * `Structure` **[VARCHAR(8)]** [NOT NULL]
   * How the `Count` number of files are divided among the total page `Size`.
 	* `a` - Same Size
@@ -143,15 +114,5 @@ To setup your own MySQL tables for the HAR parser
 * `SSLTime` **[FLOAT]** [NOT NULL]
   * Time required for SSL/TLS negotiation. If this field is defined then the time is also included in the connect field (to ensure backward compatibility with HAR 1.1).
   * Use -1 if the timing does not apply to the current request.
-* `ComputerType` **[INT(11)]** [DEFAULT NULL]
-  * Which computer was used to run HAR Parser
-    * **NOTE:** Different among internal testing
-    * `0` - Desktop - Ubuntu
-    * `1` - Raspberry Pi 3 - Ubuntu
-* `ConnectionPath` **[INT(11)]** [DEFAULT NULL]
-  * Which form of connection method was used
-    * **NOTE:** Different among internal testing
-    * `0` - Ethernet over DNS
-    * `1` - Wi-Fi over DNS
-    * `2` - Ethernet over Local Network
-    * `3` - Wi-Fi over Local Network
+* `ExtraConfig` **[INT(11)]** [DEFAULT NULL]
+  * A custom field used for personal configuration not specified 
