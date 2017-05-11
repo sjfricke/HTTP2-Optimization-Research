@@ -1,8 +1,11 @@
 # HTTP2-Optimization-Research
-The two goals of this project/research are to find the best way to get peak performance from HTTP/2 and to have it easy for others to repeat data in their enviroments
+There is a lot of data out there showing off HTTP/1.1 vs HTTP/2 but there isn't anything out there showing off how to actually get peak optimization from your HTTP/2 websites. **HTTP2-Optimization-Research** goal is to build a way of allow people help find what truly the optimized way is to adapt to HTTP/2!
 
-# How should you split up your files?
-It became practice to "hack" HTTP/1.1 by creating a huge single concatenated file with your resource. This doesn't translate to performance in HTTP/2, so we are here to answer this question
+# WE NEED YOUR HELP
+The **biggest** issue we have ran into is the number of variations to websites is more than a group of three university students could handle and we decided to trade your help of getting data with a **super easy** way of gathering it.
+
+# Our findings
+We have posted all our findings at our [main site](https://http2optimization.com/)
 
 ## Step 1 - Genearte dummy testing sites
 * We have created a [simple bash script](website_gen) that will go and generate various websites along different parameters.
@@ -22,7 +25,11 @@ It became practice to "hack" HTTP/1.1 by creating a huge single concatenated fil
 * The scripts creates each chart as its own html page which can be used to link for reference
   * You can also easily take the inner data section and combine as please
 
-# Good Additional HTTP2 Resources
-  * [Slides from Ilya Grigorik](https://bit.ly/http2-opt)
-  * [Ilya Grigorik's book](https://hpbn.co/http2/)
-  * [Surma's Chrome Dev Video](https://www.youtube.com/watch?v=r5oT_2ndjms)
+## Good Additional HTTP/2 Resources
+  * Videos on what HTTP/2 is all about
+	* [Slides from Ilya Grigorik](https://bit.ly/http2-opt)
+	* [Ilya Grigorik's book](https://hpbn.co/http2/)
+	* [Surma's Chrome Dev Video](https://www.youtube.com/watch?v=r5oT_2ndjms)
+  * How to setup HTTP/2
+	* [Nginx on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-with-http-2-support-on-ubuntu-16-04)
+ 
