@@ -7,23 +7,23 @@ The **biggest** issue we have ran into is the number of variations to websites i
 # Our findings
 We have posted all our findings at our [main site](https://http2optimization.com/)
 
-## Step 1 - Genearte dummy testing sites
+## Step 1 - Genearte Testing Websites
 * We have created a [simple bash script](website_gen) that will go and generate various websites along different parameters.
-* Since we care about the transfering of data using HTTP/2 we find it valid to fill a website with random data as the page's loading is independent of how files are sent across the wire
+* Since we care about the **transfering** of data using HTTP/2 only, we find it valid to fill a website with random data as the page's loading is independent of how files are sent across the network.
 * The script is incredibly simple to use and more detail can be found in [the website generator folder](website_gen)
 
-## Step 2 - Gather HTTP/2 request data
+## Step 2 - Gather HTTP/2 Request Data
 * After various methods we found that the best way to gather data is to automated the HAR file from the browsers.
   * This desicion is made due to lack of support of headless browsers to collect the data that the network devtools offer
   * For Chrome we ended up using the [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol) and the [NodeJS API](https://github.com/cyrus-and/chrome-remote-interface) for it and ended up grabbing the [HAR file](https://github.com/cyrus-and/chrome-har-capturer) to get the data from our request.
-* Our [Header HAR Parser](HAR) takes a database and text file with the list of sites you want to run against (one is generated automatically in the website generator)
+* Our [Headless HAR Parser](HAR) takes a database and the list of sites you want to run against (one is generated automatically in the website generator).
   * Each site it grabs and gets its HAR data where it then parses it and enters all the desired data to the database
-  * This is designed to be run as often as you want to gather all the data needed
+  * This is designed to be run as often as you want to gather all the data needed.
 
-## Step 3 - Genearte charts with data
-* Once you have the data to make it super easy to analyze it we created a [result generator](results) that will take data from the database and create a series of Google Charts
-* The scripts creates each chart as its own html page which can be used to link for reference
-  * You can also easily take the inner data section and combine as please
+## Step 3 - Auto Generate Results and Charts from Data
+* Once you have the data to make it super easy to analyze it we created a [result generator](results) that will take data from the database and create a series of Google Charts.
+* The scripts creates each chart as its own html page which can be used to link for reference.
+  * You can also easily take the inner data section and combine as please.
 
 ## Good Additional HTTP/2 Resources
   * Videos on what HTTP/2 is all about

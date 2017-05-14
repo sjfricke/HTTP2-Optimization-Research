@@ -1,51 +1,76 @@
 <html>
 
 <head> 
-	<title>HTTP2 Optimization</title>
+	<title>HTTP/2 Optimization</title>
+	<meta name="description" content="Research on what is the most optimal way to use HTTP2"/>
+	<meta name="keywords" content="HTTP2 h2 HTTP/2 Optimization" /> 
 	<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <div class="header center">
-	<h1>HTTP2 Optimization</h1>
-	<h2> Research conducted by Spencer Fricke, Christian Krueger, and Emmanuel Contreras Guzman at the University of Wisconsin Madison </h2>
+	<h1>HTTP/2 Optimization</h1> 
+	<div> <strong> Research conducted by:</strong> Spencer Fricke, Christian Krueger, and Emmanuel Contreras Guzman at the University of Wisconsin Madison </div>
+</div>
+<hr>
+<div class="intro">
+	<h2>The Problem:</h2>
+	<p>
+		With the push to get people on board using HTTP/2 over HTTP/1.1 there is some uncertainty about the most <strong>optimal</strong> new way to package your website. You may be aware it was a common <strong>hack</strong> to concat all your javascript into a single file, domain shard images, and many other techniques of the same nature. We want to find what the new geneartion of <strong>optimization hacks</strong> are for HTTP/2
+	</p>
 </div>
 
-<div class="intro">
-	<h2>THE GOAL:</h2>
+<div class="section">
+	<h2>The Conclusions</h2>
 	<p>
-		With the push to get people on board using HTTP/2 over HTTP/1.1 there is some uncertainty about the most <strong>optimal</strong> way to package your website. You may be aware it was a common hack to concat and minify all your javascript into a single file and send it over, but this defeats the purpose of caching the files. You also don't see any performance gain from bundling the files together. This is where the real questions comes in: 
+		<strong> Disclaimer: </strong> There is no "standard" website! The real world involves countless of variations to websites and different client to server configuration. We aimed to start with a baseline and we plan to improve this research as an ongoing project
 	</p>
-
-	<p class="prompts">
+	<p>
+		This is the tl;dr of what we found about trying to optimize your HTTP/2 site. Out reasoning for all of these are found below.
 		<ul>
-			<li>
-				If my site contains 1 MB worth of assets (JavaScript, CSS, images, etc.) is it better to send it as:
-				<ul>
-					<li>1 file at 1 MB</li>
-					<li>1024 files at 1 KB each</li>
-					<li>Somewhere in between</li>
-				</ul>
-			</li>
-
-			<li>If the answer is somewhere in between, is it a predictable value?</li>
-		
-			<li>Is the order in your HTML referencing of the different sized files make a difference?</li>
-		
-			<li>Is any of this dependent on the server framework being used? (Nginx vs Apache)</li>
-		
-			<li>Is any of this dependent on the browser being used? (Chrome vs Firefox)</li>
-
-			<li>Is the amount of latency matter? (Ethernet vs Wi-Fi vs 3G/4G)</li>
+			<li>HTTP/2 makes it hard to have an unoptimized website!</li>
+			<li>It is faster if you concatenate your files, <strong>but</strong> the performance gain serves <strong>is so small</strong> that you will gain better long-term performance caching seperate files instead</li>
+			<li>List all objects (JS, CSS, Images) in a descending order of file size and not ascending</li>
+			<li>Your web server (Nginx, Apache, etc) will not effect the way HTTP/2 scales</li>			
+			<li>Wireless connection will not effect the way HTTP/2 scales</li>
+			<li>Your server hardware will become a bottle-neck before HTTP/2 will from the overhead of too many files</li>
 		</ul>
 	</p>
+</div>
 
-	<h2> How we went about it </h2>
+<div class="section">
+	<h2>How We Got the Results</h2>
 	<p>
-
+		We obtained all of our data in a 3 part system which can all be found on <a href="https://github.com/sjfricke/HTTP2-Optimization-Research">GitHub</a>. This was designed to allow anyone to easily in 3 steps generate their own data as we want people to help confirm our results.
+		<br><br>
+		<strong>Step 1 - Genearte Testing Websites</strong>
+		<br>
+		We have created a simple bash script that will go and generate various websites along different parameters. Since we care about the "transfering" of data using HTTP/2 only, we find it valid to fill a website with random data as the page's loading is independent of how files are sent across the network. The script is incredibly simple to use and more detail can be found in the <a href="https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/website_gen">website generator folder</a>
+		<br><br>
+		<strong>Step 2 - Gather HTTP/2 Request Data</strong>
+		<br>
+		After various methods we found that the best way to gather data is to automated the HAR file from the browsers. This desicion is made due to lack of support of headless browsers to collect the data that the network devtools offer. For Chrome we ended up using the <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">Chrome Debugging Protocol</a> and the <a href="https://github.com/cyrus-and/chrome-remote-interface">NodeJS API</a> for it and ended up grabbing the <a href="https://github.com/cyrus-and/chrome-har-capturer">HAR file</a> to get the data from our request. Our <a href="https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/HAR">Headless HAR Parser</a> takes a database and the list of sites you want to run against (one is generated automatically in the website generator). Each site it grabs and gets its HAR data where it then parses it and enters all the desired data to the database. This is designed to be run as often as you want to gather all the data needed
+		<br><br>
+		<strong>Step 3 - Auto Generate Results and Charts from Data</strong>
+		<br>
+		Once you have the data to make it super easy to analyze it we created a <a href="https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/results">result generator</a> that will take data from the database and create a series of Google Charts. The scripts creates each chart as its own html page which can be used to link for reference. You can also easily take the inner data section and combine as please
 	</p>
+</div>
 
+<div class="section">
+	<h2>The Actual Data and Reasoning for Claims</h2>
+	<span> Click on any image to see live chart </span><br>
+	<p>
+		
+	</p>
+</div>
+
+<div class="section">
+	<h2>What is Next</h2>
+	<p>
+		aaaa
+	</p>
 </div>
 
 <body>
