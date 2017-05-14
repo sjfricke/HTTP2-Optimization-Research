@@ -24,7 +24,7 @@
 <div class="section">
 	<h2>The Conclusions</h2>
 	<p>
-		<strong> Disclaimer: </strong> There is no "standard" website! The real world involves countless of variations to websites and different client to server configuration. We aimed to start with a baseline and we plan to improve this research as an ongoing project
+		<strong> Disclaimer: </strong> There is no "standard" website! The real world involves countless of variations to websites and different client to server configuration. Theoretical values are not helpful and there is nothing consistant about internet speeds. We aimed to start with a baseline and we plan to improve this research as an ongoing project
 	</p>
 	<p>
 		This is the tl;dr of what we found about trying to optimize your HTTP/2 site. Out reasoning for all of these are found below.
@@ -60,9 +60,17 @@
 
 <div class="section">
 	<h2>The Actual Data and Reasoning for Claims</h2>
-	<span> Click on any image to see live chart </span><br>
+	<span> Click on any graphs to see live version! </span><br>
 	<p>
-		
+		The first task we set out to find is how HTTP/2 is effected as you increase the number of files. We created websites of 1, 2 and 4 MB where it was filled with even sized javascript files. Here is an example of what it looks like when we have it in the <strong>Same Size Structure</strong>.
+		<br><div class="center"> <img src="images/File_Same_Size_Diagram.png" /> </div><br>
+		After finding our results we decided to compare it to HTTP/1.1 to help us see what was really going on. Here is a graph showing how HTTP/2 scales compared to HTTP/1.1
+		<br><div class="center"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http1_vs_http2.png"/></a> </div><br>
+		What is this graph shows a few very important point. First lets take a look at how much of a difference there is between where the graph is at its low point and at 5 files for both HTTP/1.1 and HTTP/2 respectifully with a 2 MB website.
+		<br><div class="center"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http1_over_50_files.png"/></a> </div><br>
+		<br><div class="center"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http2_over_50_files.png"/></a> </div><br>
+
+
 	</p>
 </div>
 
@@ -70,6 +78,21 @@
 	<h2>What is Next</h2>
 	<p>
 		aaaa
+	</p>
+</div>
+
+<div class="section">
+	<h2>Issues we ran into for people who want to help</h2>
+	<p>
+		This was a simple task that turned into a lot of wasted hours and for anyone who might care here are things to avoid for future attempts at a similar idea.
+		<ul>
+			<li>99% of web crawling and web-bots don't rely on the browsers implentation. To test HTTP/2 we actually need the browser to grab the files since HTTP/2 is just a spec that a browser implements. Chrome as of v57 added a headless option, but the overall realm for getting loading data is not a well developed area.</li>
+			<li></li>
+			<li></li>
+			<li>We originally had more varation of website sizes and files, but because we made variations of 4 structures it started to take up to 2 hours just to run the Headless HAR Parser script for a single round</li>
+			<li></li>
+			<li></li>
+		</ul>
 	</p>
 </div>
 
