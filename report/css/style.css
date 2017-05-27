@@ -3,7 +3,7 @@
 }
 
 .pageWidth{
-	max-width: 95vw;
+	max-width: 80vw;
 }
 
 body {	
@@ -16,4 +16,8 @@ body {
 }
 
 .section {
+}
+
+.diagram {
+	border: 1px black solid;
 }

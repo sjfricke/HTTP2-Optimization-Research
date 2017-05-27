@@ -14,7 +14,7 @@ We have posted all our findings at our [main site](https://http2optimization.com
 
 ## Step 2 - Gather HTTP/2 Request Data
 * After various methods we found that the best way to gather data is to automated the HAR file from the browsers.
-  * This desicion is made due to lack of support of headless browsers to collect the data that the network devtools offer
+  * This desicion is made due to lack of support of headless browsers (currently) to collect the data that the network devtools offer
   * For Chrome we ended up using the [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol) and the [NodeJS API](https://github.com/cyrus-and/chrome-remote-interface) for it and ended up grabbing the [HAR file](https://github.com/cyrus-and/chrome-har-capturer) to get the data from our request.
 * Our [Headless HAR Parser](HAR) takes a database and the list of sites you want to run against (one is generated automatically in the website generator).
   * Each site it grabs and gets its HAR data where it then parses it and enters all the desired data to the database

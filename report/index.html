@@ -17,24 +17,24 @@
 <div class="intro">
 	<h2>The Problem:</h2>
 	<p>
-		With the push to get people on board using HTTP/2 over HTTP/1.1 there is some uncertainty about the most <strong>optimal</strong> new way to package your website. You may be aware it was a common <strong>hack</strong> to concat all your javascript into a single file, domain shard images, and many other techniques of the same nature. We want to find what the new geneartion of <strong>optimization hacks</strong> are for HTTP/2
+		With the push to get people on board using HTTP/2 over HTTP/1.1 there is some uncertainty about the most <strong>optimal</strong> new way to package your website. You may be aware it was a common <strong>hack</strong> to concat all your javascript into a single file, domain shard images, and many other techniques of the same nature to get better load times for your website. We are set out to find what the new geneartion of <strong>optimization hacks</strong> are for HTTP/2.
 	</p>
 </div>
 
 <div class="section">
 	<h2>The Conclusions</h2>
 	<p>
-		<strong> Disclaimer: </strong> There is no "standard" website! The real world involves countless of variations to websites and different client to server configuration. Theoretical values are not helpful and there is nothing consistant about internet speeds. We aimed to start with a baseline and we plan to improve this research as an ongoing project
+		<strong> Disclaimer: </strong> There is no <strong>"standard"</strong> website! The real world involves countless variations to websites and different client to server configuration. Theoretical values are not helpful and there is nothing consistant about internet speeds. We aimed to start with a baseline and we plan to improve this research as an ongoing project
 	</p>
 	<p>
 		This is the tl;dr of what we found about trying to optimize your HTTP/2 site. Out reasoning for all of these are found below.
 		<ul>
-			<li>HTTP/2 makes it hard to have an unoptimized website!</li>
-			<li>It is faster if you concatenate your files, <strong>but</strong> the performance gain serves <strong>is so small</strong> that you will gain better long-term performance caching seperate files instead</li>
-			<li>List all objects (JS, CSS, Images) in a descending order of file size and not ascending</li>
-			<li>Your web server (Nginx, Apache, etc) will not effect the way HTTP/2 scales</li>			
-			<li>Wireless connection will not effect the way HTTP/2 scales</li>
-			<li>Your server hardware will become a bottle-neck before HTTP/2 will from the overhead of too many files</li>
+			<li><strong>HTTP/2 makes it hard to have an unoptimized website!</strong> (biggest takeaway)</li> 
+			<li>It is faster if you concatenate your files, <strong>but</strong> the performance gain serves <strong>is so small</strong> that you will gain better long-term performance caching seperate files instead.</li>
+			<li>List all objects (JS, CSS, Images) in a descending order of file size and not ascending.</li>
+			<li>Your web server (Nginx, Apache, etc) will not effect the way HTTP/2 scales.</li>			
+			<li>Wireless connection will not effect the way HTTP/2 scales.</li>
+			<li>Your server hardware will become a bottle-neck before HTTP/2 will from the overhead of too many files.</li>
 		</ul>
 	</p>
 </div>
@@ -50,7 +50,7 @@
 		<br><br>
 		<strong>Step 2 - Gather HTTP/2 Request Data</strong>
 		<br>
-		After various methods we found that the best way to gather data is to automated the HAR file from the browsers. This desicion is made due to lack of support of headless browsers to collect the data that the network devtools offer. For Chrome we ended up using the <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">Chrome Debugging Protocol</a> and the <a href="https://github.com/cyrus-and/chrome-remote-interface">NodeJS API</a> for it and ended up grabbing the <a href="https://github.com/cyrus-and/chrome-har-capturer">HAR file</a> to get the data from our request. Our <a href="https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/HAR">Headless HAR Parser</a> takes a database and the list of sites you want to run against (one is generated automatically in the website generator). Each site it grabs and gets its HAR data where it then parses it and enters all the desired data to the database. This is designed to be run as often as you want to gather all the data needed
+		After various methods we found that the best way to gather data is to automated the HAR file from the browsers. This desicion is made due to lack of support of headless browsers (currently) to collect the data that the network devtools offer. For Chrome we ended up using the <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">Chrome Debugging Protocol</a> and the <a href="https://github.com/cyrus-and/chrome-remote-interface">NodeJS API</a> for it and ended up grabbing the <a href="https://github.com/cyrus-and/chrome-har-capturer">HAR file</a> to get the data from our request. Our <a href="https://github.com/sjfricke/HTTP2-Optimization-Research/tree/master/HAR">Headless HAR Parser</a> takes a database and the list of sites you want to run against (one is generated automatically in the website generator). Each site it grabs and gets its HAR data where it then parses it and enters all the desired data to the database. This is designed to be run as often as you want to gather all the data needed
 		<br><br>
 		<strong>Step 3 - Auto Generate Results and Charts from Data</strong>
 		<br>
@@ -58,18 +58,51 @@
 	</p>
 </div>
 
-<div class="section">
+<div class="section" style="font-size: 120%;">
 	<h2>The Actual Data and Reasoning for Claims</h2>
-	<span> Click on any graphs to see live version! </span><br>
+	<span style="color:red;"> <strong> Click on any graphs to see live version!</strong></span><br>
 	<p>
-		The first task we set out to find is how HTTP/2 is effected as you increase the number of files. We created websites of 1, 2 and 4 MB where it was filled with even sized javascript files. Here is an example of what it looks like when we have it in the <strong>Same Size Structure</strong>.
-		<br><div class="center"> <img src="images/File_Same_Size_Diagram.png" /> </div><br>
+		The first task we set out to find is how HTTP/2 is effected as you increase the number of files. We created websites of 1, 2 and 4 MB where it was filled with even sized javascript files. We had more sizes, but due to length of testing, we picked three common/approipate sizes.
+		<br>Here is an example of what it looks like when we have it in the <strong>Same Size Structure</strong>.
+		<br><div class="center diagram"> <img class="pageWidth" src="images/File_Same_Size_Diagram.png" /> </div><br>
 		After finding our results we decided to compare it to HTTP/1.1 to help us see what was really going on. Here is a graph showing how HTTP/2 scales compared to HTTP/1.1
-		<br><div class="center"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http1_vs_http2.png"/></a> </div><br>
-		What is this graph shows a few very important point. First lets take a look at how much of a difference there is between where the graph is at its low point and at 5 files for both HTTP/1.1 and HTTP/2 respectifully with a 2 MB website.
-		<br><div class="center"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http1_over_50_files.png"/></a> </div><br>
-		<br><div class="center"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http2_over_50_files.png"/></a> </div><br>
+		<br><br><div class="center diagram"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http1_vs_http2.png"/></a> </div><br>
+		This graph shows a few very important point! To notice lets next take a look at how much of a difference there is between where the graph is at its low point and at 5 files for both HTTP/1.1 and HTTP/2 respectifully with a 2 MB website.
+		<br><br><div class="center diagram"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http1_over_50_files.png"/></a> </div><br>
+		<br><div class="center diagram"> <a href="../results/charts/http1_vs_http2.html" target="_blank"><img class="pageWidth" src="images/http2_over_50_files.png"/></a> </div><br>
+		These results is how we came to our main observation that not only is HTTP/2 almost always internally optimized, but even attempting to optimize it with the classic concat hack gets you almost no benifit. So please don't waste your effort having gulp/grunt concat all your files for you, the caching of the sites is better in long term by far.
+		
+		<br><hr><br>
+		
+		We also wanted to see if it made a difference in how your ordered your objects in your HTML. We tested this with only JavaScript objects to prevent the browsers implementation of priority to not effect the results.
+		<br> Here is a better explaination what we are refering to by the "structure" of ordering your website
+		<br><br><div class="center diagram"> <img class="pageWidth" src="images/different_structure.png" /> </div><br>
+		After running our test we noticed that there was difference with putting your objects in ascending or descending order. We also noticed that doubling the size of the website doubled the percent different between the two.
+		<br><br><div class="center diagram"> <a href="../results/charts/structures.html" target="_blank"><img class="pageWidth" src="images/Ascending_vs_Descending.png"/></a> </div><br>
+		We are not 100% sure why the gap starts out so large, evens out, and then slowly creeps away. We also notice that the big differece in the beginning is only on Apache and not Nginx. After much research and reading we came up with this explaination why descending is more optimized than ascending.
+		<br><br><div class="center diagram"> <img class="pageWidth" src="images/Ascending_vs_Descending_Diagram.png" /> </div><br>
+		The whole idea behind one TCP streaming connection is allow the server to have the highest utilization possible by filling in whenever part of a packet is not ready to transmit by sending another file down the stream (<a href="https://youtu.be/r5oT_2ndjms?t=9m20s" target="_blank">better explaination</a>). What we have concluded is that when you put your files in ascending order the last file will be large and there will be nothing to fill the gaps. With descending the large files right away are sent and there are more packets to send incase of an gap.
+	
+		<br><hr><br>
 
+		We next wanted to make sure non of the scaling of the last two observation was determined by your choice of Apache vs Nginx. We found that scaling was almost identicle and that both Apache and Nginx are up to standard with HTTP/2. 
+		<br>(<strong>Note:</strong> we just turned on server push from the server and the charts also show that without proper configuration on the developer end, server push will not work automatically)
+		<br>(<strong>BIGGER Note:</strong> we also want to retest this section due to using AWS to AWS which we saw almost zero delay in the transmission time and feel that using two machines in the same datacenter is a terrible idea for an "real world" test)
+
+		<br><br><div class="center diagram"> <a href="../results/charts/web_servers.html" target="_blank"><img class="pageWidth" src="images/web_server_compare_1.png"/></a> </div><br>
+		<a href="../results/charts/web_servers2.html" target="_blank">Here is a second version of the same data</a>
+	
+		<br><hr><br>
+
+		We tried running a set of test with wireless to compare to wired. What we really found is that wireless internet of our laptop is pretty inconsistant and all we can really say is HTTP/2 scales techincally across wireless.
+		<br><br><div class="center diagram"> <a href="../results/charts/wire_wireless.html" target="_blank"><img class="pageWidth" src="images/wireless.png"/></a> </div><br>
+
+		<br><hr><br>
+
+		Probably the most "instresting" thing we found is how your server will bottle-neck first from lack of performance capabilities before HTTP/2 will. We noticed this when we upgraded our server from a Raspberry Pi 3 to a Medium size AWS EC2 instance.
+		<br><br><div class="center diagram"> <a href="../results/charts/pi_limit.html" target="_blank"><img class="pageWidth" src="images/same_size_pi_annotated.png"/></a> </div><br>
+		<br><div class="center diagram"> <img class="pageWidth" src="images/same_size_aws_annotated.png"/></a> (no chart for data)</div><br>
+		What we are showing is that when you try to send a website of 500 or 1000 files that low powered servers just won't cut it. This is not so much a warning to how to optimize your HTTP/2 site, but helps enforce that HTTP/2 might not be the issue for a low performance load time if your website happens to be super large.
 
 	</p>
 </div>
@@ -77,7 +110,7 @@
 <div class="section">
 	<h2>What is Next</h2>
 	<p>
-		aaaa
+		Our <strong>BIGGEST</strong> issue is both the time and resources to test these optimization. We have given it "the ol college try" and seriouly wanted to find some satistfying results. But what we <strong>really</strong> need is the open source community to help confirm our test. We really tried to design our testing so that anyone with a server and client machine can "easily" get the testing going without having to spend the many hours we had to get to the point we are even at.
 	</p>
 </div>
 
@@ -87,11 +120,10 @@
 		This was a simple task that turned into a lot of wasted hours and for anyone who might care here are things to avoid for future attempts at a similar idea.
 		<ul>
 			<li>99% of web crawling and web-bots don't rely on the browsers implentation. To test HTTP/2 we actually need the browser to grab the files since HTTP/2 is just a spec that a browser implements. Chrome as of v57 added a headless option, but the overall realm for getting loading data is not a well developed area.</li>
-			<li></li>
-			<li></li>
-			<li>We originally had more varation of website sizes and files, but because we made variations of 4 structures it started to take up to 2 hours just to run the Headless HAR Parser script for a single round</li>
-			<li></li>
-			<li></li>
+			<li>Inconsistant internet speed (note that this does help showcase our testing in "real world" conditions though).</li>
+			<li>We feel its best to have the client and server not within a mile of each other and hosting good server on cloud platforms isn't free.</li>
+			<li>We originally had more varation of website sizes and files, but because we made variations of 4 structures it started to take up to 2 hours just to run the Headless HAR Parser script for a single round.</li>
+			<li>Make sure your client and server internet isn't being shared in a way to impact test (I only ran the test when no one was home and my desktop had full bandwidth of my router).</li>
 		</ul>
 	</p>
 </div>
