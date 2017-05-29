@@ -7,14 +7,14 @@ The **biggest** issue we have ran into is the number of variations to websites i
 # Our findings
 We have posted all our findings at our [main site](https://http2optimization.com/)
 
-## Step 1 - Genearte Testing Websites
+## Step 1 - Generate Testing Websites
 * We have created a [simple bash script](website_gen) that will go and generate various websites along different parameters.
-* Since we care about the **transfering** of data using HTTP/2 only, we find it valid to fill a website with random data as the page's loading is independent of how files are sent across the network.
+* Since we care about the **transferring** of data using HTTP/2 only, we find it valid to fill a website with random data as the page's loading is independent of how files are sent across the network.
 * The script is incredibly simple to use and more detail can be found in [the website generator folder](website_gen)
 
 ## Step 2 - Gather HTTP/2 Request Data
 * After various methods we found that the best way to gather data is to automated the HAR file from the browsers.
-  * This desicion is made due to lack of support of headless browsers (currently) to collect the data that the network devtools offer
+  * This decision is made due to lack of support of headless browsers (currently) to collect the data that the network devtools offer
   * For Chrome we ended up using the [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol) and the [NodeJS API](https://github.com/cyrus-and/chrome-remote-interface) for it and ended up grabbing the [HAR file](https://github.com/cyrus-and/chrome-har-capturer) to get the data from our request.
 * Our [Headless HAR Parser](HAR) takes a database and the list of sites you want to run against (one is generated automatically in the website generator).
   * Each site it grabs and gets its HAR data where it then parses it and enters all the desired data to the database
