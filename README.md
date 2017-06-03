@@ -21,6 +21,7 @@ We have posted all our findings at our [main site](https://http2optimization.com
   * This is designed to be run as often as you want to gather all the data needed.
 
 ## Step 3 - Auto Generate Results and Charts from Data
+* **NOTE:** This part is still in the working, but still doesn't prevent you from getting your own data in step 1 and 2
 * Once you have the data to make it super easy to analyze it we created a [result generator](results) that will take data from the database and create a series of Google Charts.
 * The scripts creates each chart as its own html page which can be used to link for reference.
   * You can also easily take the inner data section and combine as please.
