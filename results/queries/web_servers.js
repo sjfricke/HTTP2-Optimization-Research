@@ -50,7 +50,7 @@ var HTML = "<html><head><title>HTTP2 Opimization</title></head>\n"+
 
 // Adds buttons
 for (var i = 0; i < GROUPS.length; i++) {
-    HTML += "<button style='marginRight:10px' "+
+    HTML += "<button style='margin-right:5px' "+
 	"onclick=\"changeView(["+ GROUPS[i].index +"], '" + GROUPS[i].name + "')\""+
 	">" + GROUPS[i].name + "</button> ";
 }
